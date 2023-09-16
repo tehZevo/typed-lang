@@ -1,4 +1,5 @@
 from typed_lang.parser import parse
+from typed_lang.types import TypedType
 from .utils import TypedTestCase
 
 class TestTerminal(TypedTestCase):
@@ -31,7 +32,9 @@ class TestTerminal(TypedTestCase):
       Triple[A, B, C]
     """)
 
-    self.assertSetsEqual(result[0], {"Box[A]"})
+    print(result[0].type)
+    # a
+    self.assertEqual(result[0], TypedType("Triple[A, B, C]"))
 
   def test_parameterized_3(self):
     result = parse("""

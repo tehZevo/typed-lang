@@ -21,22 +21,17 @@ class Terminal(Symbol):
     #if parameterized:
     if len(self.params) > 0:
 
-      #grab arguments from context
-      print("params", self.params)
-      args = [context[p] for p in self.params]
-      #evaluate each arg
-      vals = [arg.value(context) for arg in args]
+      #grab arguments from context and evaluate each
+      args = [context[param].value(context) for param in self.params]
 
-      print("hello there", vals)
-      print(type(vals[0]))
+      print("hello there", args)
+      print(type(args[0]))
       #TODO: is this where the combinations should "blow up"?
       # ie should T[A|B, A|B] become {T[A, A], T[A, B], T[B, A], T[B, B]} ?
-      vals = [
-        [self.identifier + ("[" + ", ".join(v) + "]" if len(v) > 0 else "") for v in vals]
-      ]
 
-      print(vals)
-      return TypedSet(vals)
+      args = self.identifier + ("[" + ", ".join([str(a) for a in args]) + "]" if len(args) > 0 else "")
+
+      return TypedType(args)
 
     #otherwise just a single type
     return TypedType(self.identifier)
