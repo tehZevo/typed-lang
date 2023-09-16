@@ -63,12 +63,12 @@ class EvaluationVisitor:
   def visit_union(self, union):
     left = union.left.accept(self)
     right = union.right.accept(self)
-    return left | right
+    return set(left) | set(right)
 
   def visit_intersection(self, intersection):
     left = intersection.left.accept(self)
     right = intersection.right.accept(self)
-    return left & right
+    return set(left) & set(right)
 
   def visit_conditional(self, conditional):
     #if the result of the "iv" expression is not the empty set, return den
@@ -77,3 +77,7 @@ class EvaluationVisitor:
 
     #else return elzz
     return conditional.elzz.accept(self)
+
+  def visit_tuple(self, _tuple):
+    #send help
+    return frozenset([tuple([t.accept(self) for t in _tuple.types])])

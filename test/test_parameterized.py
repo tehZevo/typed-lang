@@ -1,8 +1,7 @@
-import unittest
-
 from typed_lang.parser import parse
+from .utils import TypedTestCase
 
-class TestParameterized(unittest.TestCase):
+class TestParameterized(TypedTestCase):
 
   def test_identity(self):
     result = parse("""
@@ -13,7 +12,7 @@ class TestParameterized(unittest.TestCase):
       Identity[A]
     """)
 
-    self.assertEqual(result, [{"A"}])
+    self.assertSetsEqual(result[0], {"A"})
 
   def test_wrap(self):
     result = parse("""
@@ -25,7 +24,7 @@ class TestParameterized(unittest.TestCase):
       Wrap[A]
     """)
 
-    self.assertEqual(result, [{"Box[A]"}])
+    self.assertSetsEqual(result[0], {"Box[A]"})
 
   def test_apply(self):
     #TODO: why does this work even though X and F are flipped? this should fail
@@ -39,4 +38,4 @@ class TestParameterized(unittest.TestCase):
       Apply[Identity, A]
     """)
 
-    self.assertEqual(result, [{"A"}])
+    self.assertSetsEqual(result[0], {"A"})

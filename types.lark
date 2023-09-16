@@ -22,7 +22,7 @@ evaluate: expr
 
 union: expr "|" expr
 intersection: expr "&" expr
-tuple: expr ("," expr)*
+tuple: "(" expr ("," expr)* ")"
 conditional: expr "?" expr ":" expr
 
 //types in expressions can be nested eg A[B[C]]

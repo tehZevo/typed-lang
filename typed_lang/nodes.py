@@ -71,6 +71,14 @@ class Conditional(Expression):
   def accept(self, visitor):
     return visitor.visit_conditional(self)
 
+class Tuple(Expression):
+  def __init__(self, tokens):
+    super().__init__(tokens)
+    self.types = tokens
+
+  def accept(self, visitor):
+    return visitor.visit_tuple(self)
+
 class Terminal(Node):
   def __init__(self, tokens, identifier, params):
     super().__init__(tokens)

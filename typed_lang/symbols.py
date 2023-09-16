@@ -30,10 +30,10 @@ class Terminal(Symbol):
         for v in vals
       ]
 
-      return set(*vals)
+      return frozenset(*vals)
 
     #otherwise just return the identifier
-    return set([self.identifier])
+    return frozenset([self.identifier])
 
 #represents a type definition (can be parameterized)
 class Definition(Symbol):

@@ -1,8 +1,7 @@
-import unittest
-
 from typed_lang.parser import parse
+from .utils import TypedTestCase
 
-class TestTerminal(unittest.TestCase):
+class TestTerminal(TypedTestCase):
 
   def test_terminal(self):
     result = parse("""
@@ -10,7 +9,7 @@ class TestTerminal(unittest.TestCase):
       A
     """)
 
-    self.assertEqual(result, [{"A"}])
+    self.assertSetsEqual(result[0], {"A"})
 
   def test_parameterized(self):
     result = parse("""
@@ -20,7 +19,7 @@ class TestTerminal(unittest.TestCase):
       Box[A]
     """)
 
-    self.assertEqual(result, [{"Box[A]"}])
+    self.assertSetsEqual(result[0], {"Box[A]"})
 
   def test_parameterized_2(self):
     result = parse("""
@@ -32,4 +31,4 @@ class TestTerminal(unittest.TestCase):
       (Box[A] & Box[B])
     """)
 
-    self.assertEqual(result, [{"Box[A]"}])
+    self.assertSetsEqual(result[0], {"Box[A]"})

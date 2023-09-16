@@ -1,7 +1,7 @@
 from lark import Lark, Tree, Transformer, v_args
 
 from .nodes import Terminal, Evaluate, Program, Union, Intersection, Type, \
-  Definition, Conditional
+  Definition, Conditional, Tuple
 from .program_visitor import ProgramVisitor
 
 grammar_file = "types.lark"
@@ -44,6 +44,9 @@ class TypeLang(Transformer):
   def conditional(self, *tokens):
     (iv, den, elzz) = tokens
     return Conditional(tokens, iv, den, elzz)
+
+  def tuple(self, *tokens):
+    return Tuple(tokens)
 
   def evaluate(self, *tokens):
     (expression,) = tokens
