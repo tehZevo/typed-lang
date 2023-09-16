@@ -2,6 +2,7 @@
 import pprint
 
 from .symbols import Terminal, Definition, Argument
+from .types import TypedSet, TypedAny, TypedTuple
 
 class EvaluationVisitor:
   def __init__(self, context):
@@ -63,16 +64,16 @@ class EvaluationVisitor:
   def visit_union(self, union):
     left = union.left.accept(self)
     right = union.right.accept(self)
-    return set(left) | set(right)
+    return left | right
 
   def visit_intersection(self, intersection):
     left = intersection.left.accept(self)
     right = intersection.right.accept(self)
-    return set(left) & set(right)
+    return left & right
 
   def visit_conditional(self, conditional):
     #if the result of the "iv" expression is not the empty set, return den
-    if conditional.iv.accept(self) != set():
+    if conditional.iv.accept(self) != TypedSet():
       return conditional.den.accept(self)
 
     #else return elzz
@@ -80,4 +81,4 @@ class EvaluationVisitor:
 
   def visit_tuple(self, _tuple):
     #send help
-    return frozenset([tuple([t.accept(self) for t in _tuple.types])])
+    return TypedTuple([tuple([t.accept(self) for t in _tuple.types])])

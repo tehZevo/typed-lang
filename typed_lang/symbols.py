@@ -1,6 +1,8 @@
 import pprint
 
-#base symbol class
+from .types import TypedSet, TypedTuple, TypedAny, TypedType
+
+#base symbol class, symbols can be evaluated given a context
 class Symbol:
   def __init__(self):
     pass
@@ -20,20 +22,24 @@ class Terminal(Symbol):
     if len(self.params) > 0:
 
       #grab arguments from context
+      print("params", self.params)
       args = [context[p] for p in self.params]
-      #resolve value for each arg
+      #evaluate each arg
       vals = [arg.value(context) for arg in args]
 
-      #wrap vals with this type
+      print("hello there", vals)
+      print(type(vals[0]))
+      #TODO: is this where the combinations should "blow up"?
+      # ie should T[A|B, A|B] become {T[A, A], T[A, B], T[B, A], T[B, B]} ?
       vals = [
-        [self.identifier + ("[" + ", ".join(v) + "]" if len(v) > 0 else "")]
-        for v in vals
+        [self.identifier + ("[" + ", ".join(v) + "]" if len(v) > 0 else "") for v in vals]
       ]
 
-      return frozenset(*vals)
+      print(vals)
+      return TypedSet(vals)
 
-    #otherwise just return the identifier
-    return frozenset([self.identifier])
+    #otherwise just a single type
+    return TypedType(self.identifier)
 
 #represents a type definition (can be parameterized)
 class Definition(Symbol):
@@ -51,8 +57,7 @@ class Definition(Symbol):
     #ding dong!
     return self.expression.accept(visitor)
 
-#represents an argument in a parameterized type, could be a terminal or definition
-#(or maybe another argument? idk)
+#represents an argument in a parameterized terminal or definition, could itself be a terminal or definition
 class Argument(Symbol):
   def __init__(self, arg):
     self.arg = arg

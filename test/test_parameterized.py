@@ -1,4 +1,5 @@
 from typed_lang.parser import parse
+from typed_lang.types import TypedSet, TypedAny, TypedTuple
 from .utils import TypedTestCase
 
 class TestParameterized(TypedTestCase):
@@ -12,7 +13,7 @@ class TestParameterized(TypedTestCase):
       Identity[A]
     """)
 
-    self.assertSetsEqual(result[0], {"A"})
+    self.assertEqual(result[0], TypedSet({"A"}))
 
   def test_wrap(self):
     result = parse("""
@@ -24,7 +25,7 @@ class TestParameterized(TypedTestCase):
       Wrap[A]
     """)
 
-    self.assertSetsEqual(result[0], {"Box[A]"})
+    self.assertEqual(result[0], TypedSet({"Box[A]"}))
 
   def test_apply(self):
     #TODO: why does this work even though X and F are flipped? this should fail
@@ -38,4 +39,4 @@ class TestParameterized(TypedTestCase):
       Apply[Identity, A]
     """)
 
-    self.assertSetsEqual(result[0], {"A"})
+    self.assertEqual(result[0], TypedSet({"A"}))
