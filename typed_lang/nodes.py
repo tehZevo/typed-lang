@@ -1,7 +1,3 @@
-#TODO: context can hold several things:
-#- terminals
-#- parameters
-#- functions
 
 class Node:
   def __init__(self, tokens):
@@ -55,6 +51,25 @@ class Union(Expression):
 
   def accept(self, visitor):
     return visitor.visit_union(self)
+
+class Intersection(Expression):
+  def __init__(self, tokens, left, right):
+    super().__init__(tokens)
+    self.left = left
+    self.right = right
+
+  def accept(self, visitor):
+    return visitor.visit_intersection(self)
+
+class Conditional(Expression):
+  def __init__(self, tokens, iv, den, elzz):
+    super().__init__(tokens)
+    self.iv = iv
+    self.den = den
+    self.elzz = elzz
+
+  def accept(self, visitor):
+    return visitor.visit_conditional(self)
 
 class Terminal(Node):
   def __init__(self, tokens, identifier, params):

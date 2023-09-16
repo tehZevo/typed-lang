@@ -16,29 +16,24 @@ class Terminal(Symbol):
     self.params = params
 
   def value(self, context):
-    print("AAAAAAAAA", self.identifier)
-    pprint.pprint(context)
-
     #if parameterized:
     if len(self.params) > 0:
 
+      #grab arguments from context
       args = [context[p] for p in self.params]
+      #resolve value for each arg
       vals = [arg.value(context) for arg in args]
 
+      #wrap vals with this type
       vals = [
         [self.identifier + ("[" + ", ".join(v) + "]" if len(v) > 0 else "")]
         for v in vals
       ]
 
-      vals = set(*vals)
-      print(vals)
+      return set(*vals)
 
-      return vals
-
-    #TODO: get params like in definition
-    # return vals
-
-    return set(self.identifier)
+    #otherwise just return the identifier
+    return set([self.identifier])
 
 #represents a type definition (can be parameterized)
 class Definition(Symbol):

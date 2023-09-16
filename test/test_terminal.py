@@ -21,3 +21,15 @@ class TestTerminal(unittest.TestCase):
     """)
 
     self.assertEqual(result, [{"Box[A]"}])
+
+  def test_parameterized_2(self):
+    result = parse("""
+      @A
+      @Box[T]
+
+      B = A
+
+      (Box[A] & Box[B])
+    """)
+
+    self.assertEqual(result, [{"Box[A]"}])

@@ -1,10 +1,14 @@
 from lark import Lark, Tree, Transformer, v_args
 
-from .nodes import Terminal, Evaluate, Program, Union, Type, Definition
+from .nodes import Terminal, Evaluate, Program, Union, Intersection, Type, \
+  Definition, Conditional
 from .program_visitor import ProgramVisitor
 
 grammar_file = "types.lark"
 parser = Lark.open(grammar_file, start="program")
+
+#TODO: maybe move parsing rules to nodes and visitor methods as well?
+# yes that is an anti pattern for visitor
 
 @v_args(inline=True)
 class TypeLang(Transformer):
@@ -32,6 +36,14 @@ class TypeLang(Transformer):
   def union(self, *tokens):
     (left, right) = tokens
     return Union(tokens, left, right)
+
+  def intersection(self, *tokens):
+    (left, right) = tokens
+    return Intersection(tokens, left, right)
+
+  def conditional(self, *tokens):
+    (iv, den, elzz) = tokens
+    return Conditional(tokens, iv, den, elzz)
 
   def evaluate(self, *tokens):
     (expression,) = tokens

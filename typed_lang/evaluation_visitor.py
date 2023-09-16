@@ -63,4 +63,17 @@ class EvaluationVisitor:
   def visit_union(self, union):
     left = union.left.accept(self)
     right = union.right.accept(self)
-    return set([*left, *right])
+    return left | right
+
+  def visit_intersection(self, intersection):
+    left = intersection.left.accept(self)
+    right = intersection.right.accept(self)
+    return left & right
+
+  def visit_conditional(self, conditional):
+    #if the result of the "iv" expression is not the empty set, return den
+    if conditional.iv.accept(self) != set():
+      return conditional.den.accept(self)
+
+    #else return elzz
+    return conditional.elzz.accept(self)
