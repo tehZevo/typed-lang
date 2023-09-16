@@ -1,5 +1,5 @@
 from typed_lang.parser import parse
-from typed_lang.types import TypedSet, TypedAny, TypedTuple
+from typed_lang.types import TypedSet, TypedAny, TypedTuple, TypedType, TypedNothing
 from .utils import TypedTestCase
 
 class TestOps(TypedTestCase):
@@ -11,7 +11,10 @@ class TestOps(TypedTestCase):
       A | B
     """)
 
-    self.assertEqual(result[0], TypedSet({"A", "B"}))
+    self.assertEqual(result[0], TypedSet([
+      TypedType("A"),
+      TypedType("B"),
+    ]))
 
   def test_union_2(self):
     result = parse("""
@@ -22,7 +25,11 @@ class TestOps(TypedTestCase):
       (A | B) | (B | C)
     """)
 
-    self.assertEqual(result[0], TypedSet({"A", "B", "C"}))
+    self.assertEqual(result[0], TypedSet([
+      TypedType("A"),
+      TypedType("B"),
+      TypedType("C"),
+    ]))
 
   def test_intersection(self):
     result = parse("""
@@ -31,7 +38,7 @@ class TestOps(TypedTestCase):
       A & B
     """)
 
-    self.assertEqual(result[0], TypedSet())
+    self.assertEqual(result[0], TypedNothing())
 
   def test_intersection_2(self):
     result = parse("""
@@ -42,7 +49,7 @@ class TestOps(TypedTestCase):
       (A | B) & (B | C)
     """)
 
-    self.assertEqual(result[0], TypedSet({"B"}))
+    self.assertEqual(result[0], TypedSet([TypedType("B")]))
 
   def test_conditional(self):
     result = parse("""
@@ -52,7 +59,7 @@ class TestOps(TypedTestCase):
       (A & B) ? A : B
     """)
 
-    self.assertEqual(result[0], TypedSet({"B"}))
+    self.assertEqual(result[0], TypedType("B"))
 
   def test_conditional_2(self):
     result = parse("""
@@ -62,7 +69,7 @@ class TestOps(TypedTestCase):
       (A | B) ? A : B
     """)
 
-    self.assertEqual(result[0], TypedSet({"A"}))
+    self.assertEqual(result[0], TypedType("A"))
 
   #TODO: reenable and fix tuple tests
   # def test_tuple(self):

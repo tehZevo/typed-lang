@@ -10,7 +10,7 @@ class TestTerminal(TypedTestCase):
       A
     """)
 
-    self.assertSetsEqual(result[0], {"A"})
+    self.assertEqual(result[0], TypedType("A"))
 
   def test_parameterized(self):
     result = parse("""
@@ -20,7 +20,7 @@ class TestTerminal(TypedTestCase):
       Box[A]
     """)
 
-    self.assertSetsEqual(result[0], {"Box[A]"})
+    self.assertEqual(result[0], TypedType("Box[A]"))
 
   def test_parameterized_2(self):
     result = parse("""
@@ -46,4 +46,4 @@ class TestTerminal(TypedTestCase):
       (Box[A] & Box[B])
     """)
 
-    self.assertSetsEqual(result[0], {"Box[A]"})
+    self.assertEqual(result[0], TypedType("Box[A]"))
