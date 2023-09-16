@@ -16,17 +16,16 @@ class TestParameterized(unittest.TestCase):
     self.assertEqual(result, [{"A"}])
 
   def test_wrap(self):
-    #TODO: need way to store composite types in table
     result = parse("""
       @A
-      @Box
+      @Box[T]
 
       Wrap[X] = Box[X]
 
       Wrap[A]
     """)
 
-    self.assertEqual(result, [{"A"}])
+    self.assertEqual(result, [{"Box[A]"}])
 
   def test_apply(self):
     #TODO: why does this work even though X and F are flipped? this should fail
