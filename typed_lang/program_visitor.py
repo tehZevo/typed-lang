@@ -9,8 +9,7 @@ class ProgramVisitor:
 
   def visit_terminal(self, terminal):
     assert terminal.identifier not in self.context
-    #TODO: generate symbol instead of set
-    self.context[terminal.identifier] = Terminal(terminal.identifier)
+    self.context[terminal.identifier] = Terminal(terminal.identifier, terminal.params)
 
   def visit_definition(self, definition):
     assert definition.identifier not in self.context

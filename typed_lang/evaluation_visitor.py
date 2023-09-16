@@ -6,19 +6,36 @@ from .symbols import Terminal, Definition, Argument
 class EvaluationVisitor:
   def __init__(self, context):
     self.context = context
+    print("Beginning evaluation with context:")
+    pprint.pprint(context)
 
   def visit_type(self, _type):
     print(_type.identifier)
-    pprint.pprint(self.context)
     assert _type.identifier in self.context
 
     #grab symbol from table
     symbol = self.context[_type.identifier]
     print("handling symbol type", symbol.__class__.__name__)
 
+    #TODO: try to unify signatures of each symbol's value
+    # ie can we give each symbol type params (even if they dont use them),
+    # then modify context, and pass the new context to the symbols?
+    # this would dedupe the similarity between terminal and definition
+
     #if it's a terminal symbol, just return its value
     if type(symbol) == Terminal:
-      return symbol.value()
+      #create arguments for the type we're evaluating
+      args = [Argument(arg) for arg in _type.params]
+      #create context for definition to be evaluated
+      context = self.context.copy()
+      context.update({k: v for k, v in zip(symbol.params, args)})
+
+      #pass args to symbol (which better be a definition: todo assert/raise error)
+      #TODO: raise error if type in context is not a definition
+      #TODO: raise error if arg count mismatch
+      v = symbol.value(context)
+      print(v)
+      return v
 
     #same with argument
     if type(symbol) == Argument:
@@ -26,24 +43,18 @@ class EvaluationVisitor:
 
     #if it's a definition...
     if type(symbol) == Definition:
-      #interesting, so to evaluate P[Q[T]] we have to first evaluate Q[T]
-      #visit all arg types
-      #TODO: how to handle definitions passed as params?
+      #create arguments for the type we're evaluating
       args = [Argument(arg) for arg in _type.params]
-      print("args", args)
-
       #create context for definition to be evaluated
       context = self.context.copy()
-      print(symbol.params)
       context.update({k: v for k, v in zip(symbol.params, args)})
-      print("modified context:")
-      pprint.pprint(context)
 
       #pass args to symbol (which better be a definition: todo assert/raise error)
       #TODO: raise error if type in context is not a definition
       #TODO: raise error if arg count mismatch
-      definition = self.context[_type.identifier]
-      return definition.value(context)
+      v = symbol.value(context)
+      print(v)
+      return v
 
     raise TypeError(f"Unhandlable symbol type '{type(symbol).__name__}'")
 

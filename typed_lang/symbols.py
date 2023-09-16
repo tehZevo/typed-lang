@@ -6,15 +6,17 @@ class Symbol:
     pass
 
   #symbols have a value function to evaluate their value
-  def value(self):
+  def value(self, context):
     raise NotImplementedError
 
 #represents a terminal type
 class Terminal(Symbol):
-  def __init__(self, identifier):
+  def __init__(self, identifier, params):
     self.identifier = identifier
+    self.params = params
 
-  def value(self):
+  def value(self, context):
+    #TODO: get params like in definition
     return set(self.identifier)
 
 #represents a type definition (can be parameterized)
@@ -44,5 +46,4 @@ class Argument(Symbol):
     from .evaluation_visitor import EvaluationVisitor
     #use evaluation visitor to determine value of our expression:)
     visitor = EvaluationVisitor(context)
-    print("AAAAAAAAAA", self.arg)
     return self.arg.accept(visitor)

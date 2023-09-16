@@ -57,9 +57,10 @@ class Union(Expression):
     return visitor.visit_union(self)
 
 class Terminal(Node):
-  def __init__(self, tokens, identifier):
+  def __init__(self, tokens, identifier, params):
     super().__init__(tokens)
     self.identifier = identifier
+    self.params = params
 
   def accept(self, visitor):
     return visitor.visit_terminal(self)

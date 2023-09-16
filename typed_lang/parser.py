@@ -15,6 +15,11 @@ class TypeLang(Transformer):
   def program(self, *tokens):
     return Program(tokens)
 
+  def terminal(self, *tokens):
+    identifier = tokens[0]
+    params = tokens[1]
+    return Terminal(tokens, identifier.value, params)
+
   def definition(self, *tokens):
     (identifier, params, expression) = tokens
     return Definition(tokens, identifier.value, params, expression)
@@ -23,11 +28,6 @@ class TypeLang(Transformer):
   def params(self, *tokens):
     #TODO: for now, map to values as well
     return [t.value for t in tokens]
-
-  #terminals are lambdas that map to a set of a single string with the same name
-  def terminal(self, *tokens):
-    (identifier,) = tokens
-    return Terminal(tokens, identifier.value)
 
   def union(self, *tokens):
     (left, right) = tokens

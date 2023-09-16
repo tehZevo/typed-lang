@@ -5,9 +5,10 @@ program: [statement ((";"|"\n") statement)*]
 //  between an expr to evaluate and an expr in a definition?
 ?statement: terminal | definition | evaluate
 
-terminal: "@" ID
+terminal: "@" ID params
 
 definition: ID params "=" expr
+
 params: "[" ID ("," ID)* "]" |
 
 evaluate: expr
