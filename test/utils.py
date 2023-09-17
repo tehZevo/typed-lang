@@ -1,7 +1,7 @@
 import unittest
 
 from typed_lang.parser import parse
-from typed_lang.types import TypedSet, TypedAny, TypedTuple
+from typed_lang.types import TypedUnion, TypedAny, TypedTuple
 
 def py_to_typed(py):
   if type(py) == str:
@@ -12,7 +12,7 @@ def py_to_typed(py):
     return py
 
   if type(py) == set:
-    return TypedSet([py_to_typed(e) for e in py])
+    return TypedUnion([py_to_typed(e) for e in py])
 
   if type(py) == tuple or type(py) == list:
     return TypedTuple([py_to_typed(e) for e in py])

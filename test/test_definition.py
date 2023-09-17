@@ -1,5 +1,5 @@
 from typed_lang.parser import parse
-from typed_lang.types import TypedSet, TypedType
+from typed_lang.types import TypedUnion, TypedType
 from .utils import TypedTestCase
 
 class TestDefinition(TypedTestCase):

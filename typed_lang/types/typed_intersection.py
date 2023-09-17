@@ -1,19 +1,26 @@
+from .errors import OperatorError
 
-#TODO: should operations that otherwise produce an empty typed set
-# instead produce a TypedNothing?
-
-#represents a set of valid types
-class TypedSet:
+#represents a set of valid types, all of which must be satisfied
+class TypedIntersection:
   def __init__(self, types=[]):
     self.types = frozenset(types)
 
-  def __and__(self, other): return TypedSet(self.types & other.types)
-  def __or__(self, other): return TypedSet(self.types | other.types)
+  def __and__(self, other):
+    if type(other) == TypedUnion: return TypedUnion(self.types & other.types)
+    elif type(other) == TypedType: return self & TypedUnion([other])
+
+    raise OperatorError("&", self, other)
+
+  def __or__(self, other):
+    if type(other) == TypedUnion: return TypedUnion(self.types | other.types)
+    elif type(other) == TypedType: return self | TypedUnion([other])
+
+    raise OperatorError("&", self, other)
 
   #one typed set satisfies another if it contains everything needed to be the other set.
   #TODO: i think this doesnt necessarily hold true because python set logic has strict >/<
   def __eq__(self, other):
-    if type(other) != TypedSet:
+    if type(other) != TypedUnion:
       return False
 
     return self.types == other.types
@@ -29,3 +36,6 @@ class TypedSet:
 
   def __hash__(self): return hash(self.types)
   def __repr__(self): return str(set(self.types))
+
+#TODO: circular import
+from .typed_type import TypedType

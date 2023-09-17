@@ -1,5 +1,5 @@
 from typed_lang.parser import parse
-from typed_lang.types import TypedSet, TypedAny, TypedTuple, TypedType, TypedNothing
+from typed_lang.types import TypedUnion, TypedAny, TypedTuple, TypedType, TypedNothing
 from .utils import TypedTestCase
 
 class TestOps(TypedTestCase):
@@ -11,7 +11,7 @@ class TestOps(TypedTestCase):
       A | B
     """)
 
-    self.assertEqual(result[0], TypedSet([
+    self.assertEqual(result[0], TypedUnion([
       TypedType("A"),
       TypedType("B"),
     ]))
@@ -25,7 +25,7 @@ class TestOps(TypedTestCase):
       (A | B) | (B | C)
     """)
 
-    self.assertEqual(result[0], TypedSet([
+    self.assertEqual(result[0], TypedUnion([
       TypedType("A"),
       TypedType("B"),
       TypedType("C"),
@@ -49,7 +49,7 @@ class TestOps(TypedTestCase):
       (A | B) & (B | C)
     """)
 
-    self.assertEqual(result[0], TypedSet([TypedType("B")]))
+    self.assertEqual(result[0], TypedUnion([TypedType("B")]))
 
   def test_conditional(self):
     result = parse("""
@@ -70,28 +70,3 @@ class TestOps(TypedTestCase):
     """)
 
     self.assertEqual(result[0], TypedType("A"))
-
-  #TODO: reenable and fix tuple tests
-  # def test_tuple(self):
-  #   result = parse("""
-  #     @A
-  #     @B
-  #     @C
-  #
-  #     (A, B, C)
-  #
-  #   """)
-  #
-  #   self.assertEqual(result[0], {({"A"}, {"B"}, {"C"})})
-
-  # def test_tuple_2(self):
-  #   result = parse("""
-  #     @A
-  #     @B
-  #     @C
-  #
-  #     (A|B, B) & (A, A|B)
-  #
-  #   """)
-  #
-  #   self.assertEqual(result[0], {("A", "B")})

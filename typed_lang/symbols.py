@@ -1,6 +1,6 @@
 import pprint
 
-from .types import TypedSet, TypedTuple, TypedAny, TypedType
+from .types import TypedUnion, TypedTuple, TypedAny, TypedType
 
 #base symbol class, symbols can be evaluated given a context
 class Symbol:

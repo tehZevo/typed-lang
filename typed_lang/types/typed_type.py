@@ -1,4 +1,4 @@
-from .typed_set import TypedSet
+from .typed_union import TypedUnion
 from .typed_nothing import TypedNothing
 from .typed_any import TypedAny
 
@@ -10,13 +10,22 @@ class TypedType:
 
   #TODO: handle interitance
 
-  def __and__(self, other): return self if other == self else TypedNothing()
-  def __or__(self, other): return TypedSet([self, other])
+  def __and__(self, other):
+    if type(other) == TypedUnion:
+      return TypedUnion([self]) & other
+
+    return self if other == self else TypedNothing()
+
+  def __or__(self, other):
+    if type(other) == TypedUnion:
+      return TypedUnion([self]) | other
+
+    return TypedUnion([self, other])
 
   #eqality operators mean "is satisfied by" or "satisfies"
   #eg `A < B` is read "is A satisfied by B"
   #and `A > B` is read "A satisfies B"
-  #TODO: interactions with TypedSet
+  #TODO: interactions with TypedUnion
   def __eq__(self, other):
     if type(other) != TypedType:
       return False

@@ -1,3 +1,4 @@
+from .typed_nothing import TypedNothing
 
 #TODO: make it so tuples arent "covariant"? that or just wait until we add variance modifiers
 
@@ -8,11 +9,14 @@ class TypedTuple:
     # as in, create a set of each combination?
     self.types = tuple(types)
 
-  def tuple_op(self, other, op):
-    return TypedTuple(tuple([op(a, b) for a, b in zip(self.types, other.types)]))
+  def tuple_op(self, other, op, len_or_else=False):
+    if len(self.types) != len(other.types):
+      return len_or_else
 
-  def __and__(self, other): return self.tuple_op(other, lambda a, b: a & b)
-  def __or__(self, other): return self.tuple_op(other, lambda a, b: a | b)
+    return TypedTuple([op(a, b) for a, b in zip(self.types, other.types)])
+
+  def __and__(self, other): return self.tuple_op(other, lambda a, b: a & b, TypedNothing)
+  def __or__(self, other): return self.tuple_op(other, lambda a, b: a | b, TypedNothing)
 
   def __gt__(self, other): return self.tuple_op(other, lambda a, b: a > b)
   def __ge__(self, other): return self.tuple_op(other, lambda a, b: a >= b)

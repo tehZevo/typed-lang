@@ -2,7 +2,7 @@
 import pprint
 
 from .symbols import Terminal, Definition, Argument
-from .types import TypedSet, TypedAny, TypedTuple, TypedNothing
+from .types import TypedTuple, TypedNothing
 
 class EvaluationVisitor:
   def __init__(self, context):
@@ -86,4 +86,4 @@ class EvaluationVisitor:
 
   def visit_tuple(self, _tuple):
     #send help
-    return TypedTuple([tuple([t.accept(self) for t in _tuple.types])])
+    return TypedTuple([t.accept(self) for t in _tuple.types])
