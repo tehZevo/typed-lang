@@ -5,7 +5,11 @@ program: [statement ((";"|"\n") statement)*]
 //  between an expr to evaluate and an expr in a definition?
 ?statement: terminal | definition | evaluate
 
-terminal: "@" ID params
+//TODO: "@" behaves kind of like a class declaration
+//TODO: allow params passed in to modify args of supertypes
+terminal: "@" ID params -> terminal
+  | "@" ID params EXTENDS types -> parameterized_terminal
+types: type ("," type)*
 
 definition: ID params "=" expr
 
@@ -16,13 +20,16 @@ evaluate: expr
 ?expr: union
   | intersection
   | tuple
-  // | conditional
+  | dict
   | "(" expr ")"
   | type
+  // | conditional
 
 union: expr "|" expr
 intersection: expr "&" expr
 tuple: "(" expr ("," expr)* ")"
+dict: LBRACE (key_value ",")* RBRACE
+?key_value: ID ":" expr
 //TODO: find way to incorporate conditionals in the new "satisfied by" system
 // conditional: expr "?" expr ":" expr
 
@@ -32,6 +39,10 @@ type: ID | ID "[" type ("," type)* "]"
 ID: /[a-zA-Z_][a-zA-Z0-9_]*/
 COMMENT: /#.*/
 EXTENDS: "extends"
+
+//this is just to get tokens for dict key/values
+LBRACE: "{"
+RBRACE: "}"
 
 %import common.WS
 %ignore WS

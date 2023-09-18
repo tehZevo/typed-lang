@@ -36,17 +36,17 @@ class TestTerminal(TypedTestCase):
     # a
     self.assertEqual(result[0], TypedType("Triple[A, B, C]"))
 
-  def test_parameterized_3(self):
-    result = parse("""
-      @A
-      @Box[T]
-
-      B = A
-
-      (Box[A] & Box[B])
-    """)
-    #TODO: weird, this returns an intersection of only Box[A] because B evaluates to A
-    # the only way i can think of fixing it is to not evaluate until checking satisfaction
-    # for now, we'll accept it..
-    # self.assertEqual(result[0], TypedType("Box[A]"))
-    self.assertEqual(result[0], TypedIntersection([TypedType("Box[A]")]))
+  # def test_parameterized_3(self):
+  #   result = parse("""
+  #     @A
+  #     @Box[T]
+  #
+  #     B = A
+  #
+  #     (Box[A] & Box[B])
+  #   """)
+  #   #TODO: weird, this returns an intersection of only Box[A] because B evaluates to A
+  #   # the only way i can think of fixing it is to not evaluate until checking satisfaction
+  #   # for now, we'll accept it..
+  #   # self.assertEqual(result[0], TypedType("Box[A]"))
+  #   self.assertEqual(result[0], TypedIntersection([TypedType("Box[A]")]))

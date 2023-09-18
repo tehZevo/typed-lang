@@ -12,8 +12,6 @@ class TypedTuple:
     return TypedTuple([op(a, b) for a, b in zip(self.types, other.types)])
 
   def __eq__(self, other): return self.tuple_op(other, lambda a, b: a == b)
-  def __hash__(self): return hash(self.types)
-  def __repr__(self): return str(self.types)
 
   def satisfied_by(self, other):
     #TODO: how to ensure the order in a more elegant manner?

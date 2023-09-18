@@ -12,7 +12,6 @@ class TypedType:
 
     return self.type == other.type
 
-  def __hash__(self): return hash(self.type)
   def __repr__(self): return self.type
 
   def satisfied_by(self, other):

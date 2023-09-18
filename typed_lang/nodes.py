@@ -79,11 +79,20 @@ class Tuple(Expression):
   def accept(self, visitor):
     return visitor.visit_tuple(self)
 
+class Dict(Expression):
+  def __init__(self, tokens, key_value_pairs):
+    super().__init__(tokens)
+    self.key_value_pairs = key_value_pairs
+
+  def accept(self, visitor):
+    return visitor.visit_dict(self)
+
 class Terminal(Node):
-  def __init__(self, tokens, identifier, params):
+  def __init__(self, tokens, identifier, params, supertypes=[]):
     super().__init__(tokens)
     self.identifier = identifier
     self.params = params
+    self.supertypes = supertypes
 
   def accept(self, visitor):
     return visitor.visit_terminal(self)

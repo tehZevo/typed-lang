@@ -2,11 +2,11 @@
 import pprint
 
 from .symbols import Terminal, Definition, Argument
-from .types import TypedTuple, TypedNothing, TypedIntersection, TypedUnion
+from .types import TypedTuple, TypedNothing, TypedIntersection, TypedUnion, TypedDict
 
 class EvaluationVisitor:
   def __init__(self, context):
-    self.context = context
+    self.context = context.copy()
     print("Beginning evaluation with context:")
     pprint.pprint(context)
 
@@ -81,3 +81,7 @@ class EvaluationVisitor:
   def visit_tuple(self, _tuple):
     #send help
     return TypedTuple([t.accept(self) for t in _tuple.types])
+
+  def visit_dict(self, _dict):
+    #send more help
+    return TypedDict([(k, v.accept(self)) for k, v in _dict.key_value_pairs])

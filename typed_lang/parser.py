@@ -1,7 +1,7 @@
 from lark import Lark, Tree, Transformer, v_args
 
 from .nodes import Terminal, Evaluate, Program, Union, Intersection, Type, \
-  Definition, Conditional, Tuple
+  Definition, Conditional, Tuple, Dict
 from .program_visitor import ProgramVisitor
 
 grammar_file = "types.lark"
@@ -20,18 +20,26 @@ class TypeLang(Transformer):
     return Program(tokens)
 
   def terminal(self, *tokens):
-    identifier = tokens[0]
-    params = tokens[1]
+    identifier, params = tokens
     return Terminal(tokens, identifier.value, params)
 
+  def parameterized_terminal(self, *tokens):
+    identifier, params, _, supertypes = tokens
+    return Terminal(tokens, identifier.value, params, supertypes)
+
   def definition(self, *tokens):
-    (identifier, params, expression) = tokens
+    identifier, params, expression = tokens
     return Definition(tokens, identifier.value, params, expression)
 
   #idk why this is needed to prevent params from being a tree but ok
   def params(self, *tokens):
     #TODO: for now, map to values as well
     return [t.value for t in tokens]
+
+  #idk why this is needed to prevent params from being a tree but ok
+  def types(self, *tokens):
+    #TODO: for now, map to values as well
+    return [t for t in tokens]
 
   def union(self, *tokens):
     (left, right) = tokens
@@ -47,6 +55,14 @@ class TypeLang(Transformer):
 
   def tuple(self, *tokens):
     return Tuple(tokens)
+
+  def dict(self, *tokens):
+    key_value_pairs = tokens[1:-1]
+    return Dict(tokens, key_value_pairs)
+
+  def key_value(self, *tokens):
+    key, value = tokens
+    return (key.value, value)
 
   def evaluate(self, *tokens):
     (expression,) = tokens

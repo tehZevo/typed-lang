@@ -9,7 +9,7 @@ class ProgramVisitor:
 
   def visit_terminal(self, terminal):
     assert terminal.identifier not in self.context
-    self.context[terminal.identifier] = Terminal(terminal.identifier, terminal.params)
+    self.context[terminal.identifier] = Terminal(terminal.identifier, terminal.params, terminal.supertypes)
 
   def visit_definition(self, definition):
     assert definition.identifier not in self.context

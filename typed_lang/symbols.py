@@ -13,9 +13,10 @@ class Symbol:
 
 #represents a terminal type
 class Terminal(Symbol):
-  def __init__(self, identifier, params):
+  def __init__(self, identifier, params, supertypes):
     self.identifier = identifier
     self.params = params
+    self.supertypes = supertypes
 
   def value(self, context):
     #if parameterized:
@@ -24,10 +25,24 @@ class Terminal(Symbol):
       #grab arguments from context and evaluate each
       args = [context[param].value(context) for param in self.params]
 
-      print("hello there", args)
-      print(type(args[0]))
-      #TODO: is this where the combinations should "blow up"?
-      # ie should T[A|B, A|B] become {T[A, A], T[A, B], T[B, A], T[B, B]} ?
+      #TODO: supertype logic
+      # #evaluate terminal supertypes
+      # #TODO: circular import
+      # from .evaluation_visitor import EvaluationVisitor
+      #
+      # # #TODO: this is infinitely recursing, i think because we arent updating context with the evaluated args
+      # # print("args", args)
+      # # supertypes = []
+      # # for t in self.supertypes:
+      # #   print(t.identifier, t.params[0].identifier)
+      # #   a
+      # #   val = t.accept(EvaluationVisitor(context))
+      # #
+      # #   supertypes.append(val)
+      # #
+      # # if len(supertypes) > 0:
+      # #   print(supertypes)
+      # #   a
 
       args = self.identifier + ("[" + ", ".join([str(a) for a in args]) + "]" if len(args) > 0 else "")
 

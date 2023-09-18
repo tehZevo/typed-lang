@@ -15,6 +15,24 @@ class TestDefinition(TypedTestCase):
 
     self.assertEqual(result[0], TypedType("A"))
 
+  #TODO: super/sub types
+  # def test_subtype(self):
+  #   result = parse("""
+  #     @A
+  #
+  #     @Option[T]
+  #     @Some[T] extends Option[T]
+  #     @None extends Option[Nothing]
+  #
+  #     @F extends A, B, C, D
+  #
+  #     X = A
+  #
+  #     Some[A]
+  #   """)
+  #
+  #   self.assertEqual(result[0], TypedType("A"))
+
   # def test_unknown_type(self):
   #   #TODO: this should fail with a type error because A is not defined
   #   result = parse("""
