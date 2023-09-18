@@ -3,7 +3,9 @@ from .errors import OperatorError
 #represents a set of valid types, all of which must be satisfied
 class TypedIntersection:
   def __init__(self, types=[]):
+    print(types)
     self.types = frozenset(types)
+    print("after", self.types)
 
   def __and__(self, other):
     if type(other) == TypedUnion: return TypedUnion(self.types & other.types)
@@ -20,7 +22,7 @@ class TypedIntersection:
   #one typed set satisfies another if it contains everything needed to be the other set.
   #TODO: i think this doesnt necessarily hold true because python set logic has strict >/<
   def __eq__(self, other):
-    if type(other) != TypedUnion:
+    if type(other) != TypedIntersection:
       return False
 
     return self.types == other.types
@@ -42,3 +44,4 @@ class TypedIntersection:
 
 #TODO: circular import
 from .typed_type import TypedType
+from .typed_union import TypedUnion

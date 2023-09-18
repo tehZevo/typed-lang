@@ -16,14 +16,15 @@ evaluate: expr
 ?expr: union
   | intersection
   | tuple
-  | conditional
+  // | conditional
   | "(" expr ")"
   | type
 
 union: expr "|" expr
 intersection: expr "&" expr
 tuple: "(" expr ("," expr)* ")"
-conditional: expr "?" expr ":" expr
+//TODO: find way to incorporate conditionals in the new "satisfied by" system
+// conditional: expr "?" expr ":" expr
 
 //types in expressions can be nested eg A[B[C]]
 type: ID | ID "[" type ("," type)* "]"

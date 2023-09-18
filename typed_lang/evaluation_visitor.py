@@ -2,7 +2,7 @@
 import pprint
 
 from .symbols import Terminal, Definition, Argument
-from .types import TypedTuple, TypedNothing
+from .types import TypedTuple, TypedNothing, TypedIntersection, TypedUnion
 
 class EvaluationVisitor:
   def __init__(self, context):
@@ -35,7 +35,6 @@ class EvaluationVisitor:
       #TODO: raise error if type in context is not a definition
       #TODO: raise error if arg count mismatch
       v = symbol.value(context)
-      print(v)
       return v
 
     #same with argument
@@ -54,7 +53,6 @@ class EvaluationVisitor:
       #TODO: raise error if type in context is not a definition
       #TODO: raise error if arg count mismatch
       v = symbol.value(context)
-      print(v)
       return v
 
     raise TypeError(f"Unhandlable symbol type '{type(symbol).__name__}'")
@@ -64,16 +62,12 @@ class EvaluationVisitor:
   def visit_union(self, union):
     left = union.left.accept(self)
     right = union.right.accept(self)
-    return left | right
+    return TypedUnion([left, right])
 
   def visit_intersection(self, intersection):
     left = intersection.left.accept(self)
     right = intersection.right.accept(self)
-    print(type(left), type(right))
-    print(left, right)
-    print(left & right)
-    print(type(left & right))
-    return left & right
+    return TypedIntersection([left, right])
 
   def visit_conditional(self, conditional):
     #if the result of the "iv" expression is not the empty set, return den
