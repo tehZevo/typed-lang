@@ -26,3 +26,18 @@ class TypedTuple:
 
   def __hash__(self): return hash(self.types)
   def __repr__(self): return str(self.types)
+
+  def satisfied_by(self, other):
+    #TODO: how to ensure the order in a more elegant manner?
+    if type(other) == TypedTuple:
+      return all([a.satisfied_by(b) for a, b in zip(self.types, other.types)])
+    #if ANY in the intersection satisfy us, then we're satisfied (think "A extends B and C" satisfies "B")
+    if type(other) == TypedIntersection:
+      return any([self.satisfied_by(t) for t in other.types])
+    if type(other) == TypedUnion:
+      return any([self.satisfied_by(t) for t in other.types])
+
+    return False
+
+from .typed_intersection import TypedIntersection
+from .typed_union import TypedUnion

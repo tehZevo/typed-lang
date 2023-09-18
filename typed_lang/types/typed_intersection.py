@@ -37,5 +37,8 @@ class TypedIntersection:
   def __hash__(self): return hash(self.types)
   def __repr__(self): return str(set(self.types))
 
+  def satisfied_by(self, other):
+    return all([t.satisfied_by(other) for t in self.types])
+
 #TODO: circular import
 from .typed_type import TypedType

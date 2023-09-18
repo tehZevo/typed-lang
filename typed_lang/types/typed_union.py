@@ -41,5 +41,8 @@ class TypedUnion:
   def __hash__(self): return hash(self.types)
   def __repr__(self): return str(set(self.types))
 
+  def satisfied_by(self, other):
+    return any([t.satisfied_by(other) for t in self.types])
+
 #TODO: avoiding circular import
 from .typed_type import TypedType
