@@ -1,7 +1,7 @@
 from lark import Lark, Tree, Transformer, v_args
 
 from .nodes import Terminal, Evaluate, Program, Union, Intersection, Type, \
-  Definition, Conditional, Tuple, Dict
+  Definition, Conditional, Tuple, Dict, Satisfaction
 from .program_visitor import ProgramVisitor
 
 grammar_file = "types.lark"
@@ -67,6 +67,10 @@ class TypeLang(Transformer):
   def evaluate(self, *tokens):
     (expression,) = tokens
     return Evaluate(tokens, expression)
+
+  def satisfaction(self, *tokens):
+    (left, right) = tokens
+    return Satisfaction(tokens, left, right)
 
   def type(self, *tokens):
     identifier = tokens[0]

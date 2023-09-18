@@ -1,4 +1,4 @@
-from typed_lang.types import TypedType, TypedUnion, TypedIntersection, TypedTuple
+from typed_lang.types import TypedType, TypedUnion, TypedIntersection, TypedTuple, TypedDict
 
 A = TypedType("A")
 B = TypedType("B")
@@ -16,3 +16,11 @@ C_and_D = TypedIntersection([C, D])
 
 AB = TypedTuple([A, B])
 BA = TypedTuple([B, A])
+
+DICT_A = TypedDict({"a": A})
+DICT_B = TypedDict({"b": B})
+
+DICT_AB = TypedDict({
+  "a": A,
+  "b": B
+})

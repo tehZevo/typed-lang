@@ -1,5 +1,6 @@
 
 #represents any possible type
+#TODO: idk maybe this should be Unit?
 class TypedAny:
   def __init__(self):
     pass

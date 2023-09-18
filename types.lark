@@ -21,6 +21,7 @@ evaluate: expr
   | intersection
   | tuple
   | dict
+  | satisfaction
   | "(" expr ")"
   | type
   // | conditional
@@ -30,6 +31,8 @@ intersection: expr "&" expr
 tuple: "(" expr ("," expr)* ")"
 dict: LBRACE (key_value ",")* RBRACE
 ?key_value: ID ":" expr
+satisfaction: expr ">=" expr
+
 //TODO: find way to incorporate conditionals in the new "satisfied by" system
 // conditional: expr "?" expr ":" expr
 

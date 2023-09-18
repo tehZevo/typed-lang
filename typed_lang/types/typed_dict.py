@@ -1,7 +1,7 @@
 
 class TypedDict:
-  def __init__(self, key_value_pairs):
-    self.types = dict(key_value_pairs)
+  def __init__(self, type_dict):
+    self.types = type_dict
 
   def __eq__(self, other):
     if type(other) != TypedDict:
@@ -15,10 +15,10 @@ class TypedDict:
     return type(other) == TypedAny
 
   def key_satisfied_by(self, other, key):
-    if key not in other:
+    if type(other) != TypedDict or key not in other.types:
       return False
 
-    return self[key].satisfied_by(other[key])
+    return self.types[key].satisfied_by(other.types[key])
 
   def satisfied_by(self, other):
     #each key could be satisfied by either type in the intersection
@@ -35,3 +35,6 @@ class TypedDict:
       ])
 
     return False
+
+from .typed_intersection import TypedIntersection
+from .typed_union import TypedUnion

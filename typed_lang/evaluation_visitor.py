@@ -2,7 +2,7 @@
 import pprint
 
 from .symbols import Terminal, Definition, Argument
-from .types import TypedTuple, TypedNothing, TypedIntersection, TypedUnion, TypedDict
+from .types import TypedTuple, TypedNothing, TypedIntersection, TypedUnion, TypedDict, TypedAny
 
 class EvaluationVisitor:
   def __init__(self, context):
@@ -84,4 +84,15 @@ class EvaluationVisitor:
 
   def visit_dict(self, _dict):
     #send more help
-    return TypedDict([(k, v.accept(self)) for k, v in _dict.key_value_pairs])
+    return TypedDict(dict([(k, v.accept(self)) for k, v in _dict.key_value_pairs]))
+
+  def visit_satisfaction(self, satisfaction):
+    #eval left and right
+    left = satisfaction.left.accept(self)
+    right = satisfaction.right.accept(self)
+
+    #if left satisfies right, then return any, else return nothing
+    if right.satisfied_by(left):
+      return TypedAny()
+
+    return TypedNothing()

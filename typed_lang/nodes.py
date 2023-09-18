@@ -87,6 +87,15 @@ class Dict(Expression):
   def accept(self, visitor):
     return visitor.visit_dict(self)
 
+class Satisfaction(Expression):
+  def __init__(self, tokens, left, right):
+    super().__init__(tokens)
+    self.left = left
+    self.right = right
+
+  def accept(self, visitor):
+    return visitor.visit_satisfaction(self)
+
 class Terminal(Node):
   def __init__(self, tokens, identifier, params, supertypes=[]):
     super().__init__(tokens)

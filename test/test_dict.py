@@ -7,21 +7,21 @@ class TestDict(TypedTestCase):
   pass
 
   #TODO
-  # def test_dict(self):
-  #   result = parse("""
-  #     @A
-  #     @B
-  #     @C
-  #
-  #     Z = {
-  #       a: A,
-  #       b: B,
-  #     }
-  #
-  #     Z
-  #   """)
-  #
-  #   self.assertEqual(result[0], TypedDict([
-  #     ["a", A],
-  #     ["b", B]
-  #   ]))
+  def test_dict(self):
+    result = parse("""
+      @A
+      @B
+
+      #TODO: fix mandatory trailing commas
+      DICT_A = {a: A,}
+      DICT_B = {b: B,}
+
+      Z = {
+        a: A,
+        b: B,
+      }
+
+      (DICT_A & DICT_B) >= Z
+    """)
+
+    self.assertEqual(result[0], TypedAny())
