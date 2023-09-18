@@ -3,6 +3,14 @@
 
 You will never use the wrong type again. Why? Because in Typed (name TBD), everything is types!
 
+## Features
+* Type-safety
+* ADTs (Algebraic Data Types)
+  * Sum: union types
+  * Product: tuple and intersection types
+* Generic types
+* Multiple inheritance (TODO)
+
 ## Examples
 Terminal type declarations; these are your "root" types:
 ```ts
