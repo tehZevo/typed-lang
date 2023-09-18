@@ -7,5 +7,7 @@ class TypedAny:
 
   def __eq__(self, other): return type(other) == TypedAny
 
+  def __repr__(self): return "Any"
+
   def satisfied_by(self, other):
     return True

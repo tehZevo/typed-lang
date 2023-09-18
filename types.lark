@@ -17,14 +17,15 @@ params: "[" ID ("," ID)* "]" |
 
 evaluate: expr
 
-?expr: union
-  | intersection
-  | tuple
-  | dict
+//lower = higher precedence
+?expr: conditional
   | satisfaction
-  | "(" expr ")"
+  | dict
   | type
-  // | conditional
+  | "(" expr ")"
+  | tuple
+  | union
+  | intersection
 
 union: expr "|" expr
 intersection: expr "&" expr
@@ -32,9 +33,7 @@ tuple: "(" expr ("," expr)* ")"
 dict: LBRACE (key_value ",")* RBRACE
 ?key_value: ID ":" expr
 satisfaction: expr ">=" expr
-
-//TODO: find way to incorporate conditionals in the new "satisfied by" system
-// conditional: expr "?" expr ":" expr
+conditional: expr "?" expr ":" expr
 
 //types in expressions can be nested eg A[B[C]]
 type: ID | ID "[" type ("," type)* "]"

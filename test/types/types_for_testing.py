@@ -1,4 +1,4 @@
-from typed_lang.types import TypedType, TypedUnion, TypedIntersection, TypedTuple, TypedDict
+from typed_lang.types import TypedType, TypedUnion, TypedIntersection, TypedTuple, TypedDict, TypedAny, TypedNothing
 
 A = TypedType("A")
 B = TypedType("B")
@@ -24,3 +24,6 @@ DICT_AB = TypedDict({
   "a": A,
   "b": B
 })
+
+Any = TypedAny()
+Nothing = TypedNothing()

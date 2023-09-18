@@ -1,7 +1,7 @@
 from typed_lang.parser import parse
 from typed_lang.types import TypedUnion, TypedAny, TypedTuple, TypedType, TypedNothing, TypedIntersection
 from .utils import TypedTestCase
-from .types.types_for_testing import A, B, C, D, A_or_B, A_and_B, B_or_C, B_and_C
+from .types.types_for_testing import A, B, C, D, A_or_B, A_and_B, B_or_C, B_and_C, Any, Nothing
 
 class TestOps(TypedTestCase):
 
@@ -9,10 +9,11 @@ class TestOps(TypedTestCase):
     result = parse("""
       @A
       @B
-      A | B
+
+      A >= A | B
     """)
 
-    self.assertEqual(result[0], A_or_B)
+    self.assertEqual(result[0], Any)
 
   def test_union_2(self):
     result = parse("""
@@ -20,19 +21,24 @@ class TestOps(TypedTestCase):
       @B
       @C
 
-      (A | B) | (B | C)
+      Z = (A | B) | (B | C)
+
+      A >= Z
+      B >= Z
+      C >= Z
     """)
 
-    self.assertEqual(result[0], TypedUnion([A_or_B, B_or_C]))
+    self.assertEqual(result, [Any, Any, Any])
 
   def test_intersection(self):
     result = parse("""
       @A
       @B
-      A & B
+
+      A & B >= A
     """)
 
-    self.assertEqual(result[0], A_and_B)
+    self.assertEqual(result[0], Any)
 
   def test_intersection_2(self):
     result = parse("""
@@ -40,28 +46,22 @@ class TestOps(TypedTestCase):
       @B
       @C
 
-      (A | B) & (B | C)
+      Z = (A | B) & (B | C)
+
+      A >= Z
+      B >= Z
+      C >= Z
     """)
 
-    self.assertEqual(result[0], TypedIntersection([A_or_B, B_or_C]))
+    self.assertEqual(result, [Nothing, Any, Nothing])
 
-  #TODO: conditional doesnt make sense in "satisfied by" system
-  # def test_conditional(self):
-  #   result = parse("""
-  #     @A
-  #     @B
-  #
-  #     (A & B) ? A : B
-  #   """)
-  #
-  #   self.assertEqual(result[0], TypedType("B"))
-  #
-  # def test_conditional_2(self):
-  #   result = parse("""
-  #     @A
-  #     @B
-  #
-  #     (A | B) ? A : B
-  #   """)
-  #
-  #   self.assertEqual(result[0], TypedType("A"))
+  def test_conditional(self):
+    result = parse("""
+      @A
+      @B
+
+      A >= A ? A : B
+      A >= B ? A : B
+    """)
+
+    self.assertEqual(result, [A, B])

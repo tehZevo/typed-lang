@@ -4,9 +4,7 @@ from .utils import TypedTestCase
 from .types.types_for_testing import A, B, C, D, A_or_B, A_and_B, B_or_C, B_and_C
 
 class TestDict(TypedTestCase):
-  pass
 
-  #TODO
   def test_dict(self):
     result = parse("""
       @A
