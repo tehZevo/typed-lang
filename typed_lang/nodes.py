@@ -20,6 +20,15 @@ class Program(Node):
     return [r for r in results if r is not None]
 
 class Definition(Node):
+  def __init__(self, tokens, identifier, expression):
+    super().__init__(tokens)
+    self.identifier = identifier
+    self.expression = expression
+
+  def accept(self, visitor):
+    return visitor.visit_definition(self)
+
+class ParameterizedDefinition(Node):
   def __init__(self, tokens, identifier, params, expression):
     super().__init__(tokens)
     self.identifier = identifier
@@ -27,13 +36,24 @@ class Definition(Node):
     self.expression = expression
 
   def accept(self, visitor):
-    return visitor.visit_definition(self)
+    return visitor.visit_parameterized_definition(self)
 
 class Expression(Node):
   def __init__(self, tokens):
     super().__init__(tokens)
 
 class Type(Expression):
+  def __init__(self, tokens, identifier):
+    super().__init__(tokens)
+    self.identifier = identifier
+
+  def __repr__(self):
+    return f"Type node {self.identifier}"
+
+  def accept(self, visitor):
+    return visitor.visit_type(self)
+
+class TypeCall(Expression):
   def __init__(self, tokens, identifier, params):
     super().__init__(tokens)
     #TODO: rename params to "args"?
@@ -41,10 +61,10 @@ class Type(Expression):
     self.params = params
 
   def __repr__(self):
-    return f"Type node {self.identifier}"
+    return f"TypeCall node {self.identifier}"
 
   def accept(self, visitor):
-    return visitor.visit_type(self)
+    return visitor.visit_typecall(self)
 
 class Union(Expression):
   def __init__(self, tokens, left, right):
@@ -100,14 +120,24 @@ class Satisfaction(Expression):
     return visitor.visit_satisfaction(self)
 
 class Terminal(Node):
-  def __init__(self, tokens, identifier, params, supertypes=[]):
+  def __init__(self, tokens, identifier):
     super().__init__(tokens)
     self.identifier = identifier
-    self.params = params
-    self.supertypes = supertypes
 
   def accept(self, visitor):
     return visitor.visit_terminal(self)
+
+class ParameterizedTerminal(Node):
+  def __init__(self, tokens, identifier, params):
+    super().__init__(tokens)
+    self.identifier = identifier
+    self.params = params
+
+  def __repr__(self):
+    return f"ParameterizedTerminal {self.identifier}[{','.join(self.params)}]"
+
+  def accept(self, visitor):
+    return visitor.visit_parameterized_terminal(self)
 
 #TODO: assumes an expression is always just an identifier
 class Evaluate(Node):

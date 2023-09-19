@@ -17,6 +17,7 @@ class TestDefinition(TypedTestCase):
     self.assertEqual(result[0], TypedType("A"))
 
   def test_scope(self):
+    print("---BEGIN TEST SCOPE---")
     result = parse("""
       @Box[T]
       @A

@@ -7,13 +7,13 @@ program: [statement ((";"|"\n") statement)*]
 
 //TODO: "@" behaves kind of like a class declaration
 //TODO: allow params passed in to modify args of supertypes
-terminal: "@" ID params -> terminal
-  | "@" ID params EXTENDS types -> parameterized_terminal
-types: type ("," type)*
+terminal: "@" ID  -> terminal
+  | "@" ID params -> parameterized_terminal
 
-definition: ID params "=" expr
+definition: ID "=" expr -> definition
+  | ID params "=" expr  -> parameterized_definition
 
-params: "[" ID ("," ID)* "]" |
+params: "[" ID ("," ID)* "]"
 
 evaluate: expr
 
@@ -22,6 +22,7 @@ evaluate: expr
   | satisfaction
   | dict
   | type
+  | typecall
   | "(" expr ")"
   | tuple
   | union
@@ -35,12 +36,17 @@ dict: LBRACE (key_value ",")* RBRACE
 satisfaction: expr ">=" expr
 conditional: expr "?" expr ":" expr
 
-//types in expressions can be nested eg A[B[C]]
-type: ID | ID "[" type ("," type)* "]"
+//TODO: type is kind of ambiguous with other things requiring just an identifier
+type: ID
+typecall: ID "[" types "]" -> typecall
+types: (type|typecall) ("," (type|typecall))*
 
 ID: /[a-zA-Z_][a-zA-Z0-9_]*/
 COMMENT: /#.*/
 EXTENDS: "extends"
+ANY: "any"
+NOTHING: "nothing"
+UNIT: "unit"
 
 //this is just to get tokens for dict key/values
 LBRACE: "{"

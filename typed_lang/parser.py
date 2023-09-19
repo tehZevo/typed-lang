@@ -1,7 +1,8 @@
 from lark import Lark, Tree, Transformer, v_args
 
 from .nodes import Terminal, Evaluate, Program, Union, Intersection, Type, \
-  Definition, Conditional, Tuple, Dict, Satisfaction
+  Definition, Conditional, Tuple, Dict, Satisfaction, ParameterizedTerminal, \
+  ParameterizedDefinition, TypeCall
 from .program_visitor import ProgramVisitor
 
 grammar_file = "types.lark"
@@ -20,16 +21,20 @@ class TypeLang(Transformer):
     return Program(tokens)
 
   def terminal(self, *tokens):
-    identifier, params = tokens
-    return Terminal(tokens, identifier.value, params)
+    (identifier,) = tokens
+    return Terminal(tokens, identifier.value)
 
   def parameterized_terminal(self, *tokens):
-    identifier, params, _, supertypes = tokens
-    return Terminal(tokens, identifier.value, params, supertypes)
+    identifier, params = tokens
+    return ParameterizedTerminal(tokens, identifier.value, params)
 
   def definition(self, *tokens):
+    identifier, expression = tokens
+    return Definition(tokens, identifier.value, expression)
+
+  def parameterized_definition(self, *tokens):
     identifier, params, expression = tokens
-    return Definition(tokens, identifier.value, params, expression)
+    return ParameterizedDefinition(tokens, identifier.value, params, expression)
 
   #idk why this is needed to prevent params from being a tree but ok
   def params(self, *tokens):
@@ -66,6 +71,7 @@ class TypeLang(Transformer):
 
   def evaluate(self, *tokens):
     (expression,) = tokens
+    print(tokens)
     return Evaluate(tokens, expression)
 
   def satisfaction(self, *tokens):
@@ -74,9 +80,18 @@ class TypeLang(Transformer):
 
   def type(self, *tokens):
     identifier = tokens[0]
+
+    return Type(tokens, identifier)
+
+  def typecall(self, *tokens):
+    identifier = tokens[0]
     params = tokens[1:]
 
-    return Type(tokens, identifier, params)
+    return TypeCall(tokens, identifier, params)
+
+  def typecall(self, *tokens):
+    identifier, params = tokens
+    return TypeCall(tokens, identifier, params)
 
 def parse(text, print_tree=False):
   tree = parser.parse(text)

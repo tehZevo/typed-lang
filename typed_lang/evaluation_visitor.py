@@ -1,8 +1,8 @@
 #TODO: track evaluation depth between here and symbols
 import pprint
 
-from .symbols import Terminal, Definition, Argument
-from .types import TypedTuple, TypedNothing, TypedIntersection, TypedUnion, TypedDict, TypedAny
+from .types import TypedTuple, TypedNothing, TypedIntersection, TypedUnion, TypedDict, TypedAny, TypedGeneric, TypedType
+from .nodes import ParameterizedTerminal
 
 class EvaluationVisitor:
   def __init__(self, context):
@@ -10,63 +10,56 @@ class EvaluationVisitor:
     # print("Beginning evaluation with context:")
     # pprint.pprint(context)
 
+  def create_context(self, generic):
+    print("generic", generic)
+    print(generic.identifier, generic.params)
+    #extract param names
+    param_names = self.context[generic.identifier].params
+    #create arguments for the generic we're evaluating
+    #pull from symbol table
+    #TODO: handle this more smoothly
+    if type(generic) == ParameterizedTerminal:
+      args = [self.context[k] for k in generic.params]
+    else:
+      args = [self.context[k.identifier] for k in generic.params]
+    #put them into the copied context
+    context = self.context.copy()
+    print("context before")
+    pprint.pprint(context)
+    context.update({k: v for k, v in zip(param_names, args)})
+    print("context after")
+    pprint.pprint(context)
+    #evaluate
+    return context
+
+  def visit_terminal(self, terminal):
+    #TODO: is this needed?
+    raise NotImplementedError
+
+  def visit_definition(self, definition):
+    #TODO: is this needed?
+    raise NotImplementedError
+
+  def visit_typecall(self, typecall):
+    print("handling typecall")
+    #create context and evaluate
+    symbol = self.context[typecall.identifier]
+    return symbol.evaluate(self.create_context(typecall))
+
+  def visit_parameterized_terminal(self, terminal):
+    print("handling parameterized terminal")
+    #create context and evaluate
+    symbol = self.context[terminal.identifier]
+    context = self.create_context(terminal)
+    #TODO: kinda jank, just create the type here...
+    #TODO: need some way to store complex types inside of a terminal (/typedtype)?
+    return TypedType(f"{terminal.identifier}[{', '.join([context[p].type for p in symbol.params])}]")
+
   def visit_type(self, _type):
     assert _type.identifier in self.context
-
-    #grab symbol from table
-    symbol = self.context[_type.identifier]
-    print("handling symbol type", symbol.__class__.__name__)
-
-    #TODO: try to unify signatures of each symbol's value
-    # ie can we give each symbol type params (even if they dont use them),
-    # then modify context, and pass the new context to the symbols?
-    # this would dedupe the similarity between terminal and definition
-
-    #handle terminal
-    if type(symbol) == Terminal:
-
-      #create arguments for the type we're evaluating
-      args = [Argument(arg) for arg in _type.params]
-      #create context for definition to be evaluated
-      context = self.context.copy()
-      #TODO: right here is where the recursive T -> T happens
-      print(_type.identifier)
-      print(list(zip(symbol.params, _type.params)))
-      print("context before")
-      pprint.pprint(context)
-      context.update({k: v for k, v in zip(symbol.params, args)})
-      print("context after")
-      pprint.pprint(context)
-      # if "T" in context and type(context["T"]) == Argument:
-      #   a
-
-      #pass args to symbol (which better be a definition: todo assert/raise error)
-      #TODO: raise error if type in context is not a definition
-      #TODO: raise error if arg count mismatch
-      v = symbol.value(context)
-      return v
-
-    #handle argument
-    if type(symbol) == Argument:
-      return symbol.value(self.context)
-
-    #if it's a definition...
-    if type(symbol) == Definition:
-      #create arguments for the type we're evaluating
-      args = [Argument(arg) for arg in _type.params]
-      #create context for definition to be evaluated
-      context = self.context.copy()
-      context.update({k: v for k, v in zip(symbol.params, args)})
-
-      #pass args to symbol (which better be a definition: todo assert/raise error)
-      #TODO: raise error if type in context is not a definition
-      #TODO: raise error if arg count mismatch
-      v = symbol.value(context)
-      return v
-
-    raise TypeError(f"Unhandlable symbol type '{type(symbol).__name__}'")
-
-    raise NotImplementedError
+    #just return the symbol in our context
+    print("handling specified")
+    return self.context[_type.identifier]
 
   def visit_union(self, union):
     left = union.left.accept(self)
