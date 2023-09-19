@@ -7,11 +7,10 @@ from .types import TypedTuple, TypedNothing, TypedIntersection, TypedUnion, Type
 class EvaluationVisitor:
   def __init__(self, context):
     self.context = context.copy()
-    print("Beginning evaluation with context:")
-    pprint.pprint(context)
+    # print("Beginning evaluation with context:")
+    # pprint.pprint(context)
 
   def visit_type(self, _type):
-    print(_type.identifier)
     assert _type.identifier in self.context
 
     #grab symbol from table
@@ -23,13 +22,23 @@ class EvaluationVisitor:
     # then modify context, and pass the new context to the symbols?
     # this would dedupe the similarity between terminal and definition
 
-    #if it's a terminal symbol, just return its value
+    #handle terminal
     if type(symbol) == Terminal:
+
       #create arguments for the type we're evaluating
       args = [Argument(arg) for arg in _type.params]
       #create context for definition to be evaluated
       context = self.context.copy()
+      #TODO: right here is where the recursive T -> T happens
+      print(_type.identifier)
+      print(list(zip(symbol.params, _type.params)))
+      print("context before")
+      pprint.pprint(context)
       context.update({k: v for k, v in zip(symbol.params, args)})
+      print("context after")
+      pprint.pprint(context)
+      # if "T" in context and type(context["T"]) == Argument:
+      #   a
 
       #pass args to symbol (which better be a definition: todo assert/raise error)
       #TODO: raise error if type in context is not a definition
@@ -37,7 +46,7 @@ class EvaluationVisitor:
       v = symbol.value(context)
       return v
 
-    #same with argument
+    #handle argument
     if type(symbol) == Argument:
       return symbol.value(self.context)
 

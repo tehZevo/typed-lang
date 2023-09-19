@@ -65,3 +65,30 @@ class TestOps(TypedTestCase):
     """)
 
     self.assertEqual(result, [A, B])
+
+
+  # def test_either(self):
+  #   result = parse("""
+  #     # @A
+  #     # @B
+  #     # @Some[T]
+  #     # @None
+  #     #
+  #     # # Either[T] = Some[T] | None
+  #     #
+  #     # Some[A]
+  #     #
+  #     # # Either[A]
+  #
+  #     @A
+  #     @X[T]
+  #
+  #     #this works
+  #     Y[V] = X[V]
+  #     #this is infinite recursion, probably need to copy context somewhere
+  #     #Y[T] = X[T]
+  #
+  #     Y[A]
+  #   """)
+  #
+  #   self.assertEqual(result, [A, B])

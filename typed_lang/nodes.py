@@ -40,6 +40,9 @@ class Type(Expression):
     self.identifier = identifier
     self.params = params
 
+  def __repr__(self):
+    return f"Type node {self.identifier}"
+
   def accept(self, visitor):
     return visitor.visit_type(self)
 

@@ -18,6 +18,9 @@ class Terminal(Symbol):
     self.params = params
     self.supertypes = supertypes
 
+  def __repr__(self):
+    return f"Terminal {self.identifier}[{', '.join(self.params)}]"
+
   def value(self, context):
     #if parameterized:
     if len(self.params) > 0:
@@ -57,11 +60,14 @@ class Definition(Symbol):
     self.params = params
     self.expression = expression
 
+  def __repr__(self):
+    return f"definition [{', '.join(self.params)}]"
+
   #TODO: modify context before so we dont have to pass args?
   def value(self, context):
     #TODO: circular import
     from .evaluation_visitor import EvaluationVisitor
-    #use evaluation visitor to determine value of our expression:)
+    #use evaluation visitor to determine value of our expression :)
     visitor = EvaluationVisitor(context)
     print("dimension hopping...")
     #ding dong!
@@ -71,6 +77,9 @@ class Definition(Symbol):
 class Argument(Symbol):
   def __init__(self, arg):
     self.arg = arg
+
+  def __repr__(self):
+    return f"Argument {self.arg}"
 
   def value(self, context):
     #TODO: circular import
