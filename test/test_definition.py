@@ -51,8 +51,8 @@ class TestDefinition(TypedTestCase):
   #
   #     UnboxOption[Some[A], A]
   #   """)
-
-    self.assertEqual(result[0], TypedType("Box[A]"))
+  #
+  #   self.assertEqual(result[0], TypedType("Box[A]"))
 
   def test_scope(self):
     result = parse("""
