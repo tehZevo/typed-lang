@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from typed_lang.parser import parse
 from typed_lang.types import TypedType, TypedIntersection
+from typed_lang.errors import RequirementError
 from .types.types_for_testing import Any, Nothing
 
 class TestTerminal(TestCase):
@@ -49,7 +50,7 @@ class TestTerminal(TestCase):
     self.assertEqual(result[0], TypedType("Cup[Liquid]"))
 
   def test_neg_requirement(self):
-    self.assertRaises(ValueError, parse, """
+    self.assertRaises(RequirementError, parse, """
       @Liquid
       @NotLiquid
       @Cup[X: Liquid]

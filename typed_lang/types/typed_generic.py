@@ -1,3 +1,4 @@
+from ..errors import RequirementError
 
 #represents a type that can be evaluated given a context
 class TypedGeneric:
@@ -16,7 +17,7 @@ class TypedGeneric:
       if expr is None:
         continue
       if not expr.satisfied_by(context[id]):
-        raise ValueError(f"{context[id]} does not satisfy {expr}")
+        raise RequirementError(id, expr, context[id])
 
     #TODO: circular import
     from typed_lang.evaluation_visitor import EvaluationVisitor

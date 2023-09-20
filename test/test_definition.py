@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from typed_lang.parser import parse
 from typed_lang.types import TypedUnion, TypedType
+from typed_lang.errors import RequirementError
 from .types.types_for_testing import Any, Nothing
 
 class TestDefinition(TestCase):
@@ -29,7 +30,7 @@ class TestDefinition(TestCase):
     self.assertEqual(result[0], TypedType("A"))
 
   def test_neg_requirement(self):
-    self.assertRaises(ValueError, parse, """
+    self.assertRaises(RequirementError, parse, """
       @A
       @B
 
