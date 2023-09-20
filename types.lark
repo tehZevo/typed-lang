@@ -13,7 +13,9 @@ terminal: "@" ID  -> terminal
 definition: ID "=" expr -> definition
   | ID params "=" expr  -> parameterized_definition
 
-params: "[" ID ("," ID)* "]"
+params: "[" param ("," param)* "]"
+param: ID -> param
+  | ID ":" expr -> param_with_req
 
 evaluate: expr
 
@@ -43,6 +45,7 @@ types: (type|typecall) ("," (type|typecall))*
 
 ID: /[a-zA-Z_][a-zA-Z0-9_]*/
 COMMENT: /#.*/
+TYPE: "type"
 EXTENDS: "extends"
 ANY: "any"
 NOTHING: "nothing"

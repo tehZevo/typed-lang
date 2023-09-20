@@ -7,29 +7,25 @@ from .nodes import ParameterizedTerminal
 class EvaluationVisitor:
   def __init__(self, context):
     self.context = context.copy()
-    # print("Beginning evaluation with context:")
-    # pprint.pprint(context)
+    print("Beginning evaluation with context:")
+    pprint.pprint(context)
 
   def create_context(self, generic):
-    print("generic", generic)
-    print(generic.identifier, generic.params)
+    print("creating context for", generic)
     #extract param names
-    param_names = self.context[generic.identifier].params
+    param_names = [name for (name, expr) in self.context[generic.identifier].params]
     #create arguments for the generic we're evaluating
     #pull from symbol table
     #TODO: handle this more smoothly
     if type(generic) == ParameterizedTerminal:
-      args = [self.context[k] for k in generic.params]
+      # args = [self.context[k] for k in generic.params]
+      args = [self.context[name] for (name, _) in generic.params]
     else:
       args = [self.context[k.identifier] for k in generic.params]
     #put them into the copied context
     context = self.context.copy()
-    print("context before")
-    pprint.pprint(context)
     context.update({k: v for k, v in zip(param_names, args)})
-    print("context after")
-    pprint.pprint(context)
-    #evaluate
+
     return context
 
   def visit_terminal(self, terminal):
@@ -41,24 +37,23 @@ class EvaluationVisitor:
     raise NotImplementedError
 
   def visit_typecall(self, typecall):
-    print("handling typecall")
     #create context and evaluate
     symbol = self.context[typecall.identifier]
     return symbol.evaluate(self.create_context(typecall))
 
   def visit_parameterized_terminal(self, terminal):
-    print("handling parameterized terminal")
     #create context and evaluate
     symbol = self.context[terminal.identifier]
     context = self.create_context(terminal)
     #TODO: kinda jank, just create the type here...
     #TODO: need some way to store complex types inside of a terminal (/typedtype)?
-    return TypedType(f"{terminal.identifier}[{', '.join([context[p].type for p in symbol.params])}]")
+    # print(symbol.params)
+    # a
+    return TypedType(f"{terminal.identifier}[{', '.join([context[name].type for (name, _) in symbol.params])}]")
 
   def visit_type(self, _type):
     assert _type.identifier in self.context
     #just return the symbol in our context
-    print("handling specified")
     return self.context[_type.identifier]
 
   def visit_union(self, union):
@@ -73,7 +68,6 @@ class EvaluationVisitor:
 
   def visit_conditional(self, conditional):
     #if the result of the "iv" expression is not the empty set, return den
-    print("hello", conditional.iv.accept(self))
     if conditional.iv.accept(self) != TypedNothing():
       return conditional.den.accept(self)
 

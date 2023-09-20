@@ -16,8 +16,26 @@ class TestDefinition(TypedTestCase):
 
     self.assertEqual(result[0], TypedType("A"))
 
+  def test_requirement(self):
+    result = parse("""
+      @Liquid
+      @Cup[X: Liquid]
+
+      Cup[Liquid]
+    """)
+
+    self.assertEqual(result[0], TypedType("Cup[Liquid]"))
+
+  def test_neg_requirement(self):
+    self.assertRaises(ValueError, parse, """
+      @Liquid
+      @NotLiquid
+      @Cup[X: Liquid]
+
+      Cup[NotLiquid]
+    """)
+
   def test_scope(self):
-    print("---BEGIN TEST SCOPE---")
     result = parse("""
       @Box[T]
       @A
@@ -32,32 +50,18 @@ class TestDefinition(TypedTestCase):
 
     self.assertEqual(result, [Any, Nothing])
 
-  #TODO: a parameterized type, you can get the value of given a context
-  # (which will modify the context and then evaluate its expression)
-  #TODO: an unparameterized type can be immediately evaluated
-  #TODO: name the parameterized symbols "functions" and the unparameterized "values"
-  #TODO: all symbols will either be a function type or a non-function type
-  # function types can be evaluated given a context
-  #TODO: this will reduce the symbol types to only one (instead of argument/definition/terminal)
-  #TODO: need to differentiate between generic definition and generic evaluation
+  def test_scope2(self):
+    print("---BEGIN TEST SCOPE 2---")
+    result = parse("""
+      @Cup[X]
+      @T
 
-  #TODO: to fix, i think we have to evaluate types upon passing in
-  #TODO: this could get difficult when (not) evaluating parameterized types ie Apply[F, X]
-  # as we should not try to call F
-  # def test_scope2(self):
-  #   result = parse("""
-  #     @Cup[T]
-  #     @A
-  #
-  #     #even though this parameter T clashes with the parameter in Cup, we should still be able to construct a Cup[Something]
-  #     X[T] = Cup[T]
-  #
-  #     X = Cup[A]
-  #
-  #     X[A]
-  #   """)
-  #
-  #   self.assertEqual(result, [Any, Nothing])
+      Brew[X] = Cup[X]
+
+      Brew[T]
+    """)
+
+    self.assertEqual(result[0], TypedType("Cup[T]"))
 
   #TODO: super/sub types
   # def test_subtype(self):

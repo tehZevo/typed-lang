@@ -13,6 +13,9 @@ class TypedTuple:
 
   def __eq__(self, other): return self.tuple_op(other, lambda a, b: a == b)
 
+  def __repr__(self):
+    return f"({', '.join(str(t) for t in self.types)})"
+
   def satisfied_by(self, other):
     #TODO: how to ensure the order in a more elegant manner?
     if type(other) == TypedTuple:

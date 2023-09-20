@@ -10,5 +10,8 @@ class TypedUnion:
 
     return self.types == other.types
 
+  def __repr__(self):
+    return f"({' | '.join(str(t) for t in self.types)})"
+
   def satisfied_by(self, other):
     return any([t.satisfied_by(other) for t in self.types])

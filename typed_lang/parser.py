@@ -39,7 +39,16 @@ class TypeLang(Transformer):
   #idk why this is needed to prevent params from being a tree but ok
   def params(self, *tokens):
     #TODO: for now, map to values as well
-    return [t.value for t in tokens]
+    return [(id.value, req) for (id, req) in tokens]
+
+  def param(self, *tokens):
+    (identifier,) = tokens
+    #map requirement to None
+    return (identifier, None)
+
+  def param_with_req(self, *tokens):
+    (identifier, expr) = tokens
+    return (identifier, expr)
 
   #idk why this is needed to prevent params from being a tree but ok
   def types(self, *tokens):
@@ -80,18 +89,11 @@ class TypeLang(Transformer):
 
   def type(self, *tokens):
     identifier = tokens[0]
-
     return Type(tokens, identifier)
 
   def typecall(self, *tokens):
-    identifier = tokens[0]
-    params = tokens[1:]
-
-    return TypeCall(tokens, identifier, params)
-
-  def typecall(self, *tokens):
-    identifier, params = tokens
-    return TypeCall(tokens, identifier, params)
+    identifier, args = tokens
+    return TypeCall(tokens, identifier.value, args)
 
 def parse(text, print_tree=False):
   tree = parser.parse(text)

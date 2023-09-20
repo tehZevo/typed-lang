@@ -134,7 +134,7 @@ class ParameterizedTerminal(Node):
     self.params = params
 
   def __repr__(self):
-    return f"ParameterizedTerminal {self.identifier}[{','.join(self.params)}]"
+    return f"ParameterizedTerminal {self.identifier}[{','.join([name for (name, _) in self.params])}]"
 
   def accept(self, visitor):
     return visitor.visit_parameterized_terminal(self)
