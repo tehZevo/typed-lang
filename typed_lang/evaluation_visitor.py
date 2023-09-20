@@ -3,6 +3,7 @@ import pprint
 
 from .types import TypedTuple, TypedNothing, TypedIntersection, TypedUnion, TypedDict, TypedAny, TypedGeneric, TypedType
 from .nodes import ParameterizedTerminal, ParameterizedDefinition
+from .errors import UndefinedTypeError
 
 class EvaluationVisitor:
   def __init__(self, context):
@@ -11,7 +12,6 @@ class EvaluationVisitor:
     pprint.pprint(context)
 
   def create_context(self, generic):
-    print("creating context for", generic)
     #extract param names
     param_names = [name for (name, expr) in self.context[generic.identifier].params]
     #create arguments for the generic we're evaluating
@@ -50,13 +50,11 @@ class EvaluationVisitor:
     context = self.create_context(terminal)
     #TODO: kinda jank, just create the type here...
     #TODO: need some way to store complex types inside of a terminal (/typedtype)?
-    # print(symbol.params)
-    # a
-    #return TypedType(f"{terminal.identifier}[{', '.join([context[name].type for (name, _) in symbol.params])}]")
     return TypedType(f"{terminal.identifier}[{', '.join([str(context[name]) for (name, _) in symbol.params])}]")
 
   def visit_type(self, _type):
-    assert _type.identifier in self.context
+    if _type.identifier not in self.context:
+      raise UndefinedTypeError
     #just return the symbol in our context
     return self.context[_type.identifier]
 

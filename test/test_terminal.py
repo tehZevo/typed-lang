@@ -1,9 +1,10 @@
+from unittest import TestCase
+
 from typed_lang.parser import parse
 from typed_lang.types import TypedType, TypedIntersection
-from .utils import TypedTestCase
 from .types.types_for_testing import Any, Nothing
 
-class TestTerminal(TypedTestCase):
+class TestTerminal(TestCase):
 
   def test_any(self):
     result = parse("""
@@ -66,8 +67,6 @@ class TestTerminal(TypedTestCase):
       Triple[A, B, C]
     """)
 
-    print(result[0].type)
-    # a
     self.assertEqual(result[0], TypedType("Triple[A, B, C]"))
 
   # def test_parameterized_3(self):

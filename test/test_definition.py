@@ -1,9 +1,10 @@
+from unittest import TestCase
+
 from typed_lang.parser import parse
 from typed_lang.types import TypedUnion, TypedType
-from .utils import TypedTestCase
 from .types.types_for_testing import Any, Nothing
 
-class TestDefinition(TypedTestCase):
+class TestDefinition(TestCase):
 
   def test_definition(self):
     result = parse("""

@@ -2,6 +2,7 @@ import pprint
 
 from .evaluation_visitor import EvaluationVisitor
 from .types import TypedGeneric, TypedType, TypedAny
+from .errors import AlreadyDefinedTypeError
 
 class ProgramVisitor:
   def __init__(self):
@@ -22,22 +23,30 @@ class ProgramVisitor:
     return new_params
 
   def visit_terminal(self, terminal):
-    assert terminal.identifier not in self.context
+    if terminal.identifier in self.context:
+      raise AlreadyDefinedTypeError(terminal.identifier)
+
     self.context[terminal.identifier] = TypedType(terminal.identifier)
 
   def visit_parameterized_terminal(self, terminal):
-    assert terminal.identifier not in self.context
+    if terminal.identifier in self.context:
+      raise AlreadyDefinedTypeError(terminal.identifier)
+
     #put the terminal in a generic for evaluation later
     #evaluate param requirements
     params = self.evaluate_reqs(terminal.params)
     self.context[terminal.identifier] = TypedGeneric(params, terminal)
 
   def visit_definition(self, definition):
-    assert definition.identifier not in self.context
+    if definition.identifier in self.context:
+      raise AlreadyDefinedTypeError(definition.identifier)
+
     self.context[definition.identifier] = definition.expression.accept(EvaluationVisitor(self.context))
 
   def visit_parameterized_definition(self, definition):
-    assert definition.identifier not in self.context
+    if definition.identifier in self.context:
+      raise AlreadyDefinedTypeError(definition.identifier)
+
     #TODO: partially evaluate expression?
     #evaluate param requirements
     params = self.evaluate_reqs(definition.params)

@@ -18,7 +18,6 @@ class TypedGeneric:
       if not expr.satisfied_by(context[id]):
         raise ValueError(f"{context[id]} does not satisfy {expr}")
 
-    print("dimension hopping...")
     #TODO: circular import
     from typed_lang.evaluation_visitor import EvaluationVisitor
     #use evaluation visitor to determine value of our expression :)

@@ -1,8 +1,9 @@
+from unittest import TestCase
+
 from typed_lang.parser import parse
 from typed_lang.types import TypedUnion, TypedAny, TypedTuple, TypedType, TypedNothing
-from .utils import TypedTestCase
 
-class TestTuple(TypedTestCase):
+class TestTuple(TestCase):
   pass
   #equality is broken somehow for tuples
 

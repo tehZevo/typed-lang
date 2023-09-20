@@ -1,9 +1,10 @@
+from unittest import TestCase
+
 from typed_lang.parser import parse
 from typed_lang.types import TypedUnion, TypedAny, TypedTuple, TypedType, TypedNothing, TypedIntersection
-from .utils import TypedTestCase
 from .types.types_for_testing import A, B, C, D, A_or_B, A_and_B, B_or_C, B_and_C, Any, Nothing
 
-class TestOps(TypedTestCase):
+class TestOps(TestCase):
 
   def test_union(self):
     result = parse("""
