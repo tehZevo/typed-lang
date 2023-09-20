@@ -2,7 +2,7 @@ from lark import Lark, Tree, Transformer, v_args
 
 from .nodes import Terminal, Evaluate, Program, Union, Intersection, Type, \
   Definition, Conditional, Tuple, Dict, Satisfaction, ParameterizedTerminal, \
-  ParameterizedDefinition, TypeCall
+  ParameterizedDefinition, TypeCall, AnyLiteral, NothingLiteral
 from .program_visitor import ProgramVisitor
 
 grammar_file = "types.lark"
@@ -88,8 +88,14 @@ class TypeLang(Transformer):
     return Satisfaction(tokens, left, right)
 
   def type(self, *tokens):
-    identifier = tokens[0]
-    return Type(tokens, identifier)
+    t = tokens[0]
+
+    if t.type == "ANY":
+      return AnyLiteral(tokens)
+    if t.type == "NOTHING":
+      return NothingLiteral(tokens)
+
+    return Type(tokens, t)
 
   def typecall(self, *tokens):
     identifier, args = tokens

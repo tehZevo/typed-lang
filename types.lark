@@ -24,6 +24,8 @@ evaluate: expr
   | satisfaction
   | dict
   | type
+  // | any_literal
+  // | nothing_literal
   | typecall
   | "(" expr ")"
   | tuple
@@ -39,17 +41,17 @@ satisfaction: expr ">=" expr
 conditional: expr "?" expr ":" expr
 
 //TODO: type is kind of ambiguous with other things requiring just an identifier
-type: ID
-typecall: ID "[" types "]" -> typecall
+typecall: ID "[" types "]"
 types: (type|typecall) ("," (type|typecall))*
+type: ANY | NOTHING | ID
 
-ID: /[a-zA-Z_][a-zA-Z0-9_]*/
 COMMENT: /#.*/
 TYPE: "type"
 EXTENDS: "extends"
 ANY: "any"
 NOTHING: "nothing"
 UNIT: "unit"
+ID: /[a-zA-Z_][a-zA-Z0-9_]*/
 
 //this is just to get tokens for dict key/values
 LBRACE: "{"

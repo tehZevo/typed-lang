@@ -18,22 +18,41 @@ class TestDefinition(TypedTestCase):
 
   def test_requirement(self):
     result = parse("""
-      @Liquid
-      @Cup[X: Liquid]
+      @A
 
-      Cup[Liquid]
+      X[T: A] = A
+
+      X[A]
     """)
 
-    self.assertEqual(result[0], TypedType("Cup[Liquid]"))
+    self.assertEqual(result[0], TypedType("A"))
 
   def test_neg_requirement(self):
     self.assertRaises(ValueError, parse, """
-      @Liquid
-      @NotLiquid
-      @Cup[X: Liquid]
+      @A
+      @B
 
-      Cup[NotLiquid]
+      X[T: A] = A
+
+      X[B]
     """)
+
+  #TODO: requires covariance
+  # def test_option(self):
+  #   result = parse("""
+  #     @Some[T]
+  #     @None
+  #     @A
+  #
+  #     Option[T] = Some[T] | None
+  #
+  #     #TODO: i think this requires covariance
+  #     UnboxOption[O: Option[any], T] = T #Option[T] >= O ? T : nothing
+  #
+  #     UnboxOption[Some[A], A]
+  #   """)
+
+    self.assertEqual(result[0], TypedType("Box[A]"))
 
   def test_scope(self):
     result = parse("""

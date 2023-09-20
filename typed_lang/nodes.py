@@ -53,6 +53,26 @@ class Type(Expression):
   def accept(self, visitor):
     return visitor.visit_type(self)
 
+class AnyLiteral(Expression):
+  def __init__(self, tokens):
+    super().__init__(tokens)
+
+  def __repr__(self):
+    return "AnyLiteral node"
+
+  def accept(self, visitor):
+    return visitor.visit_any_literal(self)
+
+class NothingLiteral(Expression):
+  def __init__(self, tokens):
+    super().__init__(tokens)
+
+  def __repr__(self):
+    return "NothingLiteral node"
+
+  def accept(self, visitor):
+    return visitor.visit_nothing_literal(self)
+
 class TypeCall(Expression):
   def __init__(self, tokens, identifier, params):
     super().__init__(tokens)

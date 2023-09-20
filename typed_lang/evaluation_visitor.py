@@ -2,7 +2,7 @@
 import pprint
 
 from .types import TypedTuple, TypedNothing, TypedIntersection, TypedUnion, TypedDict, TypedAny, TypedGeneric, TypedType
-from .nodes import ParameterizedTerminal
+from .nodes import ParameterizedTerminal, ParameterizedDefinition
 
 class EvaluationVisitor:
   def __init__(self, context):
@@ -17,11 +17,14 @@ class EvaluationVisitor:
     #create arguments for the generic we're evaluating
     #pull from symbol table
     #TODO: handle this more smoothly
-    if type(generic) == ParameterizedTerminal:
+    #TODO: what about parameterized definition?
+    if type(generic) == ParameterizedTerminal or type(generic) == ParameterizedDefinition:
       # args = [self.context[k] for k in generic.params]
       args = [self.context[name] for (name, _) in generic.params]
     else:
-      args = [self.context[k.identifier] for k in generic.params]
+      #args = [self.context[k.identifier] for k in generic.params]
+      #evaluate param
+      args = [k.accept(EvaluationVisitor(self.context)) for k in generic.params]
     #put them into the copied context
     context = self.context.copy()
     context.update({k: v for k, v in zip(param_names, args)})
@@ -49,12 +52,19 @@ class EvaluationVisitor:
     #TODO: need some way to store complex types inside of a terminal (/typedtype)?
     # print(symbol.params)
     # a
-    return TypedType(f"{terminal.identifier}[{', '.join([context[name].type for (name, _) in symbol.params])}]")
+    #return TypedType(f"{terminal.identifier}[{', '.join([context[name].type for (name, _) in symbol.params])}]")
+    return TypedType(f"{terminal.identifier}[{', '.join([str(context[name]) for (name, _) in symbol.params])}]")
 
   def visit_type(self, _type):
     assert _type.identifier in self.context
     #just return the symbol in our context
     return self.context[_type.identifier]
+
+  def visit_any_literal(self, any):
+    return TypedAny()
+
+  def visit_nothing_literal(self, nothing):
+    return TypedNothing()
 
   def visit_union(self, union):
     left = union.left.accept(self)

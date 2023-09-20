@@ -1,8 +1,23 @@
 from typed_lang.parser import parse
 from typed_lang.types import TypedType, TypedIntersection
 from .utils import TypedTestCase
+from .types.types_for_testing import Any, Nothing
 
 class TestTerminal(TypedTestCase):
+
+  def test_any(self):
+    result = parse("""
+      any
+    """)
+
+    self.assertEqual(result[0], Any)
+
+  def test_nothing(self):
+    result = parse("""
+      nothing
+    """)
+
+    self.assertEqual(result[0], Nothing)
 
   def test_terminal(self):
     result = parse("""
@@ -21,6 +36,25 @@ class TestTerminal(TypedTestCase):
     """)
 
     self.assertEqual(result[0], TypedType("Box[A]"))
+
+  def test_requirement(self):
+    result = parse("""
+      @Liquid
+      @Cup[X: Liquid]
+
+      Cup[Liquid]
+    """)
+
+    self.assertEqual(result[0], TypedType("Cup[Liquid]"))
+
+  def test_neg_requirement(self):
+    self.assertRaises(ValueError, parse, """
+      @Liquid
+      @NotLiquid
+      @Cup[X: Liquid]
+
+      Cup[NotLiquid]
+    """)
 
   def test_parameterized_2(self):
     result = parse("""
