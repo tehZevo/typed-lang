@@ -13,8 +13,11 @@ class TypedUnion:
   def __repr__(self):
     return f"({' | '.join(str(t) for t in self.types)})"
 
+  #TODO: rename intersect to reduce
+  #TODO: once intersection/reduce is done, then we can remove >= i think
   def intersect(self, other):
-    #TODO
+    #TODO "distribute" the reduction
+    #TODO: if A satisfies B but B doesn't satisfy A, then the reduction is B
     pass
 
   def satisfied_by(self, other):

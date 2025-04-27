@@ -1,6 +1,8 @@
+#TODO: remove - intersections don't actually exist
+from .typed_base import TypedBase
 
 #represents a set of valid types, all of which must be satisfied
-class TypedIntersection:
+class TypedIntersection(TypedBase):
   def __init__(self, types=[]): #TODO: this should probably take two types as a binary operator, not a list
     self.types = types
 

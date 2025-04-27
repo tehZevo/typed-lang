@@ -1,5 +1,6 @@
+from .typed_base import TypedBase
 
-class TypedNothing:
+class TypedNothing(TypedBase):
   def __init__(self):
     pass
 

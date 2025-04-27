@@ -1,7 +1,8 @@
+from .typed_base import TypedBase
 from ..errors import RequirementError
 
 #represents a type that can be evaluated given a context
-class TypedGeneric:
+class TypedGeneric(TypedBase):
   def __init__(self, params, expr):
     self.params = params
     self.expr = expr

@@ -1,5 +1,6 @@
+from .typed_base import TypedBase
 
-class TypedDict:
+class TypedDict(TypedBase):
   def __init__(self, type_dict):
     self.types = type_dict
 

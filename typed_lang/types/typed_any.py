@@ -1,7 +1,8 @@
+from .typed_base import TypedBase
 
 #represents any possible type
 #TODO: idk maybe this should be Unit?
-class TypedAny:
+class TypedAny(TypedBase):
   def __init__(self):
     pass
 

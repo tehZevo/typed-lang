@@ -1,7 +1,8 @@
+from .typed_base import TypedBase
 
 #TODO: when we get to extending types, what is the base superclass? TypedNothing?
 #represents a single (possibly parameterized) type
-class TypedType:
+class TypedType(TypedBase):
   def __init__(self, type):
     self.type = type
 

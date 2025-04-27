@@ -1,7 +1,8 @@
+from .typed_base import TypedBase
 from .typed_nothing import TypedNothing
 
 #a type composed of multiple types
-class TypedTuple:
+class TypedTuple(TypedBase):
   def __init__(self, types):
     self.types = tuple(types)
 
