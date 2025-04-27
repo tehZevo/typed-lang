@@ -10,4 +10,7 @@ class TypedAny:
   def __repr__(self): return "Any"
 
   def satisfied_by(self, other):
+    from . import TypedNothing #TODO: import
+    if type(other) == TypedNothing:
+      return False
     return True
