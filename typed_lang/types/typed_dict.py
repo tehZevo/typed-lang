@@ -34,7 +34,16 @@ class TypedDict:
         for key in self.types.keys()
       ])
 
+    if type(other) == TypedDict:
+      return all([
+        self.key_satisfied_by(other, key)
+        for key in self.types.keys()
+      ])
+
     return False
+  
+  def __repr__(self):
+    return self.types.__repr__()
 
 from .typed_intersection import TypedIntersection
 from .typed_union import TypedUnion
