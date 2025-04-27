@@ -80,7 +80,7 @@ class TypeLang(Transformer):
 
   def evaluate(self, *tokens):
     (expression,) = tokens
-    print(tokens)
+    # print(tokens)
     return Evaluate(tokens, expression)
 
   def satisfaction(self, *tokens):

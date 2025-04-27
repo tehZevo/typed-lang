@@ -8,8 +8,8 @@ from .errors import UndefinedTypeError
 class EvaluationVisitor:
   def __init__(self, context):
     self.context = context.copy()
-    print("Beginning evaluation with context:")
-    pprint.pprint(context)
+    #print("Beginning evaluation with context:")
+    # pprint.pprint(context)
 
   def create_context(self, generic):
     #extract param names

@@ -50,7 +50,7 @@ class TestOps(TestCase):
       Z = (A | B) & (B | C)
 
       A >= Z
-      B >= Z
+      B >= Z #TODO: why this not satisfy
       C >= Z
     """)
 

@@ -5,6 +5,7 @@ class TypedGeneric:
   def __init__(self, params, expr):
     self.params = params
     self.expr = expr
+    # print("hi", self.params, self.expr)
 
   #TODO: generic pre-eval equality?
   def __eq__(self, other): return False
