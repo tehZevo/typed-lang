@@ -1,0 +1,39 @@
+# # Terminal type declarations
+# @A
+# @B
+# @C
+
+# # Type definitions
+# MyType = A
+
+# # Type union
+# Union = A | B
+
+# # Parameterized type definitions
+# Identity[T] = T
+
+# # Parameterized types can be arguments of other parameterized types
+# Apply[F, X] = F[X]
+
+# Apply[Identity, A]
+
+# #@A
+
+# #Apply[X, F] = F[X]
+# #Identity[X] = X
+
+# #Apply[Identity, A]
+
+@A
+@B
+
+C = {
+    a: A,
+    b: B,
+}
+
+D = {
+    a: A,
+}
+
+C >= D
