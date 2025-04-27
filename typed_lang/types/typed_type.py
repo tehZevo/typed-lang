@@ -14,6 +14,12 @@ class TypedType:
 
   def __repr__(self): return self.type
 
+  def intersect(self, other):
+    if self.type == other.type:
+      return self
+    
+    return TypedNothing()
+
   def satisfied_by(self, other):
     if type(other) == TypedType: return self.type == other.type
     #NOTE: all must satisfy this in a union (ie, A|B does not satisfy A, because it could be B)
@@ -24,3 +30,4 @@ class TypedType:
 
 from .typed_union import TypedUnion
 from .typed_intersection import TypedIntersection
+from .typed_nothing import TypedNothing

@@ -13,5 +13,9 @@ class TypedUnion:
   def __repr__(self):
     return f"({' | '.join(str(t) for t in self.types)})"
 
+  def intersect(self, other):
+    #TODO
+    pass
+
   def satisfied_by(self, other):
     return any([t.satisfied_by(other) for t in self.types])

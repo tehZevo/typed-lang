@@ -20,9 +20,25 @@ class TypedDict:
 
     return self.types[key].satisfied_by(other.types[key])
 
+  def intersect(self, other):
+    #TODO: allow intersections with unions
+    if type(other) != TypedDict:
+      return TypedNothing()
+
+    intersection = {}
+    for key in self.types.keys():
+      if key not in other.types:
+        continue
+      a = self.types[key]
+      b = other.types[key]
+      intersection[key] = a.intersect(b)
+    
+    return TypedDict(intersection)
+
   def satisfied_by(self, other):
     #each key could be satisfied by either type in the intersection
-    if type(other) == TypedIntersection:
+    #TODO: remove, intersections don't exist
+    if type(other) == TypedIntersection: #TODO: remove? intersection should resolve itself
       return all([
         any([self.key_satisfied_by(t, key) for t in other.types])
         for key in self.types.keys()

@@ -64,6 +64,7 @@ class EvaluationVisitor:
   def visit_nothing_literal(self, nothing):
     return TypedNothing()
 
+  #TODO: call union on all types, which could combine types (e.g. dicts merge) or just return union
   def visit_union(self, union):
     left = union.left.accept(self)
     right = union.right.accept(self)
@@ -72,7 +73,7 @@ class EvaluationVisitor:
   def visit_intersection(self, intersection):
     left = intersection.left.accept(self)
     right = intersection.right.accept(self)
-    return TypedIntersection([left, right])
+    return left.intersect(right)
 
   def visit_conditional(self, conditional):
     #if the result of the "iv" expression is not the empty set, return den

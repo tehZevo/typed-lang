@@ -16,6 +16,19 @@ class TypedTuple:
   def __repr__(self):
     return f"({', '.join(str(t) for t in self.types)})"
 
+  def intersect(self, other):
+    if type(other) != TypedTuple:
+      return TypedNothing()
+    
+    if len(other.types) != len(self.types):
+      return TypedNothing()
+    
+    intersection = []
+    for a, b in zip(self.types, other.types):
+      intersection.append(a.intersect(b))
+    
+    return TypedTuple(intersection)
+
   def satisfied_by(self, other):
     #TODO: how to ensure the order in a more elegant manner?
     if type(other) == TypedTuple:
