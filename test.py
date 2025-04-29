@@ -1,44 +1,10 @@
-# # Terminal type declarations
-# @A
-# @B
-# @C
+@Basket[T]
+@Apple
+@Orange
 
-# # Type definitions
-# MyType = A
+Fruit = Apple | Orange
 
-# # Type union
-# Union = A | B
+A = Basket[Apple]
+B = Basket[Fruit]
 
-# # Parameterized type definitions
-# Identity[T] = T
-
-# # Parameterized types can be arguments of other parameterized types
-# Apply[F, X] = F[X]
-
-# Apply[Identity, A]
-
-# #@A
-
-# #Apply[X, F] = F[X]
-# #Identity[X] = X
-
-# #Apply[Identity, A]
-
-@A
-@B
-
-# X = (A, A | B, B)
-# Y = (A, A, A)
-
-@Animal
-@Robot
-@Quack
-@DuckWalk
-
-RealDuck = Animal & Quack & DuckWalk
-RoboDuck = Robot & Quack & DuckWalk
-RealDuck ^ RoboDuck
-
-Animal & Animal
-
-#TODO: reduce A & A to A and A | A to A during construction
+A ^ B

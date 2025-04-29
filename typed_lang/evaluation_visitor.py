@@ -48,9 +48,8 @@ class EvaluationVisitor:
     #create context and evaluate
     symbol = self.context[terminal.identifier]
     context = self.create_context(terminal)
-    #TODO: kinda jank, just create the type here...
-    #TODO: need some way to store complex types inside of a terminal (/typedtype)?
-    return TypedType(f"{terminal.identifier}[{', '.join([str(context[name]) for (name, _) in symbol.params])}]")
+    generics = [context[name] for (name, _) in symbol.params]
+    return TypedType(terminal.identifier, generics)
 
   def visit_type(self, _type):
     if _type.identifier not in self.context:

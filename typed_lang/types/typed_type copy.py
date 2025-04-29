@@ -3,23 +3,17 @@ from .typed_base import TypedBase
 #TODO: when we get to extending types, what is the base superclass? TypedNothing?
 #represents a single (possibly parameterized) type
 class TypedType(TypedBase):
-  def __init__(self, name, generics=None):
-    self.name = name
-    self.generics = generics if generics is not None else []
+  def __init__(self, type):
+    self.type = type
 
   #TODO: handle interitance
   def __eq__(self, other):
     if type(other) != TypedType:
       return False
 
-    #TODO: handle generics
-    return self.name == other.name
+    return self.type == other.type
 
-  def __repr__(self):
-    if len(self.generics) == 0:
-      return self.name
-
-    return f"{self.name}[{', '.join([str(g) for g in self.generics])}]"
+  def __repr__(self): return self.type
 
   def reduce(self, other):
     if type(other) == TypedIntersection:
@@ -27,14 +21,16 @@ class TypedType(TypedBase):
     if type(other) == TypedUnion:
       return other.reduce(self)
     
-    if type(other) == TypedType and self.name == other.name:
-      reduction = [a.reduce(b) for a, b in zip(self.generics, other.generics)]
-      return TypedType(self.name, reduction)
+    # print(self.type, other.type)
+    #TODO: we need to retain the generic data here
+    print(self.type, other.type)
+    if type(other) == TypedType and self.type == other.type:
+      return self
     
     return TypedNothing()
 
   def satisfied_by(self, other):
-    if type(other) == TypedType: return self.name == other.name
+    if type(other) == TypedType: return self.type == other.type
     #NOTE: all must satisfy this in a union (ie, A|B does not satisfy A, because it could be B)
     if type(other) == TypedUnion: return all([self.satisfied_by(t) for t in other.types])
     if type(other) == TypedIntersection: return any([self.satisfied_by(t) for t in other.types])
