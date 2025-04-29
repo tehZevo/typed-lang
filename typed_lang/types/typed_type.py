@@ -27,7 +27,10 @@ class TypedType(TypedBase):
     if type(other) == TypedUnion:
       return other.reduce(self)
     
-    if type(other) == TypedType and self.name == other.name:
+    #TODO: need a length check on generics somewhere during creation
+    if type(other) == TypedType \
+        and self.name == other.name \
+        and len(self.generics) == len(other.generics):
       reduction = [a.reduce(b) for a, b in zip(self.generics, other.generics)]
       return TypedType(self.name, reduction)
     
