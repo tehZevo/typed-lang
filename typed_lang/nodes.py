@@ -104,6 +104,15 @@ class Intersection(Expression):
   def accept(self, visitor):
     return visitor.visit_intersection(self)
 
+class Duck(Expression):
+  def __init__(self, tokens, left, right):
+    super().__init__(tokens)
+    self.left = left
+    self.right = right
+
+  def accept(self, visitor):
+    return visitor.visit_duck(self)
+
 class Conditional(Expression):
   def __init__(self, tokens, iv, den, elzz):
     super().__init__(tokens)

@@ -26,7 +26,7 @@ class TypedTuple(TypedBase):
     
     intersection = []
     for a, b in zip(self.types, other.types):
-      intersection.append(a.intersect(b))
+      intersection.append(a.reduce(b))
     
     return TypedTuple(intersection)
 

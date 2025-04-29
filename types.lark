@@ -29,11 +29,13 @@ evaluate: expr
   | typecall
   | "(" expr ")"
   | tuple
+  | duck
   | union
   | intersection
 
 union: expr "|" expr
 intersection: expr "&" expr
+duck: expr "^" expr
 tuple: "(" expr ("," expr)* ")"
 dict: LBRACE (key_value ",")* RBRACE
 ?key_value: ID ":" expr

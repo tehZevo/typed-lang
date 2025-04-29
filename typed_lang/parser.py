@@ -1,6 +1,6 @@
 from lark import Lark, Tree, Transformer, v_args
 
-from .nodes import Terminal, Evaluate, Program, Union, Intersection, Type, \
+from .nodes import Terminal, Evaluate, Program, Union, Intersection, Duck, Type, \
   Definition, Conditional, Tuple, Dict, Satisfaction, ParameterizedTerminal, \
   ParameterizedDefinition, TypeCall, AnyLiteral, NothingLiteral
 from .program_visitor import ProgramVisitor
@@ -62,6 +62,10 @@ class TypeLang(Transformer):
   def intersection(self, *tokens):
     (left, right) = tokens
     return Intersection(tokens, left, right)
+  
+  def duck(self, *tokens):
+    (left, right) = tokens
+    return Duck(tokens, left, right)
 
   def conditional(self, *tokens):
     (iv, den, elzz) = tokens

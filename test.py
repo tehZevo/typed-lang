@@ -30,4 +30,4 @@
 X = (A, A | B, B)
 Y = (A, A, A)
 
-X & Y
+X ^ Y
