@@ -27,7 +27,18 @@
 @A
 @B
 
-X = (A, A | B, B)
-Y = (A, A, A)
+# X = (A, A | B, B)
+# Y = (A, A, A)
 
-X ^ Y
+@Animal
+@Robot
+@Quack
+@DuckWalk
+
+RealDuck = Animal & Quack & DuckWalk
+RoboDuck = Robot & Quack & DuckWalk
+RealDuck ^ RoboDuck
+
+Animal & Animal
+
+#TODO: reduce A & A to A and A | A to A during construction

@@ -16,7 +16,11 @@ class TypedType(TypedBase):
   def __repr__(self): return self.type
 
   def reduce(self, other):
-    if self.type == other.type:
+    if type(other) == TypedIntersection:
+      return other.reduce(self)
+    if type(other) == TypedUnion:
+      return other.reduce(self)
+    if type(other) == TypedType and self.type == other.type:
       return self
     
     return TypedNothing()

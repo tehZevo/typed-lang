@@ -13,12 +13,17 @@ class TypedUnion:
   def __repr__(self):
     return f"({' | '.join(str(t) for t in self.types)})"
 
-  #TODO: rename intersect to reduce
-  #TODO: once intersection/reduce is done, then we can remove >= i think
   def reduce(self, other):
-    #TODO "distribute" the reduction
-    #TODO: if A satisfies B but B doesn't satisfy A, then the reduction is B
-    pass
+    #TODO: is this really how reduction works for unions? i think if any are nothing, then it should fail entirely right...?
+    reduced = [t.reduce(other) for t in self.types]
+    reduced = [t for t in reduced if type(t) != TypedNothing]
+    if len(reduced) == 0:
+      return TypedNothing()
+    if len(reduced) == 1:
+      return reduced[0]
+    return TypedUnion(reduced)
 
   def satisfied_by(self, other):
     return any([t.satisfied_by(other) for t in self.types])
+
+from .typed_nothing import TypedNothing

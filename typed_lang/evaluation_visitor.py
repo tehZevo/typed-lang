@@ -64,15 +64,18 @@ class EvaluationVisitor:
   def visit_nothing_literal(self, nothing):
     return TypedNothing()
 
-  #TODO: call union on all types, which could combine types (e.g. dicts merge) or just return union
   def visit_union(self, union):
     left = union.left.accept(self)
     right = union.right.accept(self)
+    if left == right:
+      return left
     return TypedUnion([left, right])
 
   def visit_intersection(self, intersection):
     left = intersection.left.accept(self)
     right = intersection.right.accept(self)
+    if left == right:
+      return left
     return TypedIntersection([left, right])
   
   def visit_duck(self, duck):
