@@ -1,5 +1,5 @@
 
-#represents a set of valid types, any of which would satisfy
+#represents a set of types where the value could be any of the types
 class TypedUnion:
   def __init__(self, types=[]):
     self.types = types
@@ -15,7 +15,7 @@ class TypedUnion:
 
   #TODO: rename intersect to reduce
   #TODO: once intersection/reduce is done, then we can remove >= i think
-  def intersect(self, other):
+  def reduce(self, other):
     #TODO "distribute" the reduction
     #TODO: if A satisfies B but B doesn't satisfy A, then the reduction is B
     pass

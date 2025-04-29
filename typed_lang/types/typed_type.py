@@ -15,7 +15,7 @@ class TypedType(TypedBase):
 
   def __repr__(self): return self.type
 
-  def intersect(self, other):
+  def reduce(self, other):
     if self.type == other.type:
       return self
     

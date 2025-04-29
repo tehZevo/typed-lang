@@ -73,7 +73,7 @@ class EvaluationVisitor:
   def visit_intersection(self, intersection):
     left = intersection.left.accept(self)
     right = intersection.right.accept(self)
-    return left.intersect(right)
+    return TypedIntersection([left, right])
 
   def visit_conditional(self, conditional):
     #if the result of the "iv" expression is not the empty set, return den

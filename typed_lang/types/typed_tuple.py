@@ -17,7 +17,7 @@ class TypedTuple(TypedBase):
   def __repr__(self):
     return f"({', '.join(str(t) for t in self.types)})"
 
-  def intersect(self, other):
+  def reduce(self, other):
     if type(other) != TypedTuple:
       return TypedNothing()
     

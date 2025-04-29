@@ -38,8 +38,7 @@ class TypedDict(TypedBase):
 
   def satisfied_by(self, other):
     #each key could be satisfied by either type in the intersection
-    #TODO: remove, intersections don't exist
-    if type(other) == TypedIntersection: #TODO: remove? intersection should resolve itself
+    if type(other) == TypedIntersection:
       return all([
         any([self.key_satisfied_by(t, key) for t in other.types])
         for key in self.types.keys()
